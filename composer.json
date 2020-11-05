@@ -1,0 +1,24 @@
+{
+    "name": "wsssoftware/cakephp-wss-core",
+    "description": "WSSCore plugin for CakePHP",
+    "type": "cakephp-plugin",
+    "license": "MIT",
+    "require": {
+        "php": ">=7.2",
+        "cakephp/cakephp": "~4.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "WSSCore\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "WSSCore\\Test\\": "tests/",
+            "Cake\\Test\\": "vendor/cakephp/cakephp/tests/"
+        }
+    }
+}
