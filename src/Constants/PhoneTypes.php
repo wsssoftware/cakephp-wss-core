@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace WSSCore\Constants;
+namespace Toolkit\Constants;
 
 class PhoneTypes
 {

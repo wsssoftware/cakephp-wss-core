@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 
 
-namespace WSSCore\Validation;
+namespace Toolkit\Validation;
 
 
 use WSSCore\Constants\PhoneTypes;

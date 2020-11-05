@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 
 
-namespace WSSCore\Utilities;
+namespace Toolkit\Utilities;
 
 class Mask
 {

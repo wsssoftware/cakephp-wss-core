@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace WSSCore\Test\TestCase\Model\Behavior;
+namespace Toolkit\Test\TestCase\Model\Behavior;
 
 use Cake\ORM\Table;
 use Cake\TestSuite\TestCase;

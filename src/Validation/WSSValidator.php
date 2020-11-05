@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace WSSCore\Validation;
+namespace Toolkit\Validation;
 
 
 class WSSValidator extends \Cake\Validation\Validator

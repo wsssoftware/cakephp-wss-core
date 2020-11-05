@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace WSSCore\Controller;
+namespace Toolkit\Controller;
 
 use App\Controller\AppController as BaseController;
 

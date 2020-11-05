@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace WSSCore\Utilities;
+namespace Toolkit\Utilities;
 
 use Cake\Log\Log;
 use Psr\Log\LogLevel;

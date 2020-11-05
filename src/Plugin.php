@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace WSSCore;
+namespace Toolkit;
 
 use Cake\Core\BasePlugin;
 use Cake\Core\PluginApplicationInterface;
@@ -38,8 +38,8 @@ class Plugin extends BasePlugin
     public function routes(RouteBuilder $routes): void
     {
         $routes->plugin(
-            'WSSCore',
-            ['path' => '/w-s-s-core'],
+            'Toolkit',
+            ['path' => '/toolkit'],
             function (RouteBuilder $builder) {
                 // Add custom routes here
 
