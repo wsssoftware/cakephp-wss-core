@@ -1,6 +1,6 @@
 {
-    "name": "wsssoftware/cakephp-wss-core",
-    "description": "WSSCore plugin for CakePHP",
+    "name": "wsssoftware/cakephp-toolkit",
+    "description": "CakePHP Toolkit plugin for CakePHP",
     "type": "cakephp-plugin",
     "license": "MIT",
     "require": {
