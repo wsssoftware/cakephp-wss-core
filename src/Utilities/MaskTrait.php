@@ -5,8 +5,8 @@ namespace Toolkit\Utilities;
 
 use Cake\Log\Log;
 use Psr\Log\LogLevel;
-use WSSCore\Constants\PhoneTypes;
-use WSSCore\Validation\Validate;
+use Toolkit\Constants\PhoneTypes;
+use Toolkit\Validation\Validate;
 
 trait MaskTrait
 {

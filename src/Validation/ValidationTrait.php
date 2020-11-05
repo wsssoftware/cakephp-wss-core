@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace Toolkit\Validation;
 
 
-use WSSCore\Constants\PhoneTypes;
+use Toolkit\Constants\PhoneTypes;
 
 trait ValidationTrait
 {

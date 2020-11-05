@@ -5,7 +5,7 @@ namespace Toolkit\Test\TestCase\Model\Behavior;
 
 use Cake\ORM\Table;
 use Cake\TestSuite\TestCase;
-use WSSCore\Model\Behavior\UploadBehavior;
+use Toolkit\Model\Behavior\UploadBehavior;
 
 /**
  * WSSCore\Model\Behavior\UploadBehavior Test Case
