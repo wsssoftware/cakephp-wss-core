@@ -17,4 +17,9 @@ class UploadBehavior extends Behavior
      * @var array
      */
     protected $_defaultConfig = [];
+
+    public function initialize(array $config): void
+    {
+        parent::initialize($config);
+    }
 }
