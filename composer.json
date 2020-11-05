@@ -12,12 +12,12 @@
     },
     "autoload": {
         "psr-4": {
-            "WSSCore\\": "src/"
+            "Toolkit\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "WSSCore\\Test\\": "tests/",
+            "Toolkit\\Test\\": "tests/",
             "Cake\\Test\\": "vendor/cakephp/cakephp/tests/"
         }
     }
