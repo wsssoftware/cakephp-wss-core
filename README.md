@@ -1,4 +1,4 @@
-# WSSCore plugin for CakePHP
+# CakePHP Toolkit plugin for CakePHP
 
 ## Installation
 
