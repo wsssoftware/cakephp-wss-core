@@ -79,9 +79,9 @@ class WSSValidationUpload
             $size = Number::format($width) . "x" . Number::format($height);
             $imageSize = Number::format($imageWidth) . "x" . Number::format($imageHeight);
             return __('A imagem deve ter "{0}px" porem foi encontrado "{1}px"', $size, $imageSize);
-        } elseif (!empty($width)) {
+        } elseif (!empty($width) && $width !== $imageWidth) {
             return __('A imagem deve ter "{1}px" de {0} porem foi encontrado "{2}px"', __('largura'), Number::format($width), Number::format($imageWidth));
-        } elseif ((!empty($height))) {
+        } elseif (!empty($height) && $height !== $imageHeight) {
             return __('A imagem deve ter "{1}px" de {0} porem foi encontrado "{2}px"', __('altura'), Number::format($height), Number::format($imageHeight));
         }
 
