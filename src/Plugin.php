@@ -25,7 +25,7 @@ class Plugin extends BasePlugin
      */
     public function bootstrap(PluginApplicationInterface $app): void
     {
-        ImageManagerStatic::configure(['driver' => 'imagick']);
+        //ImageManagerStatic::configure(['driver' => 'imagick']);
     }
 
     /**
