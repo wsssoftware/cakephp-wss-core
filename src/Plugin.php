@@ -7,6 +7,7 @@ use Cake\Core\BasePlugin;
 use Cake\Core\PluginApplicationInterface;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\RouteBuilder;
+use Intervention\Image\ImageManagerStatic;
 
 /**
  * Plugin for WSSCore
@@ -24,6 +25,7 @@ class Plugin extends BasePlugin
      */
     public function bootstrap(PluginApplicationInterface $app): void
     {
+        ImageManagerStatic::configure(['driver' => 'imagick']);
     }
 
     /**

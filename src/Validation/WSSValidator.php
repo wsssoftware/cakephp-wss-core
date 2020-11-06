@@ -130,6 +130,7 @@ class WSSValidator extends \Cake\Validation\Validator
      * @param string|null $message The error message when the rule fails.
      * @param string|callable|null $when Either 'create' or 'update' or a callable that returns
      * @return \Toolkit\Validation\WSSValidator
+     * @see \Toolkit\Validation\WSSValidation::isDateTimeLessThanField()
      */
     public function dateTimeLessThanField(string $field, string $secondField, ?string $message = null, $when = null)
     {
@@ -148,6 +149,7 @@ class WSSValidator extends \Cake\Validation\Validator
      * @param string|null $message The error message when the rule fails.
      * @param string|callable|null $when Either 'create' or 'update' or a callable that returns
      * @return \Toolkit\Validation\WSSValidator
+     * @see \Toolkit\Validation\WSSValidation::isDateTimeGreaterThanField()
      */
     public function dateTimeGreaterThanField(string $field, string $secondField, ?string $message = null, $when = null)
     {
@@ -166,6 +168,7 @@ class WSSValidator extends \Cake\Validation\Validator
      * @param string|null $message
      * @param null $when
      * @return \Toolkit\Validation\WSSValidator
+     * @see \Toolkit\Validation\WSSValidationUpload::isValidMimeType()
      */
     public function validFileMimeTypes(string  $field, array $mimeType, ?string $message = null, $when = null)
     {
@@ -182,11 +185,29 @@ class WSSValidator extends \Cake\Validation\Validator
     /**
      * @param string $field
      * @return \Toolkit\Validation\WSSValidator
+     * @see \Toolkit\Validation\WSSValidationUpload::isValidFileUnderServerConfiguration()
      */
     public function validFileUnderServerConfiguration(string  $field)
     {
         return $this->add($field, 'validFileUnderServerConfiguration', [
                 'rule' => 'isValidFileUnderServerConfiguration',
+                'provider' => 'wss_upload',
+                'last' => true,
+            ]);
+    }
+
+    /**
+     * @param string $field
+     * @param int|null $width
+     * @param int|null $height
+     * @param null $when
+     * @return \Toolkit\Validation\WSSValidator
+     */
+    public function imageSize(string  $field, ?int $width, ?int $height, $when = null)
+    {
+        $extra = array_filter(['on' => $when]);
+        return $this->add($field, 'imageSize', $extra + [
+                'rule' => ['isImageSize', $width, $height],
                 'provider' => 'wss_upload',
                 'last' => true,
             ]);
