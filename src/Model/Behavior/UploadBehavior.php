@@ -32,6 +32,11 @@ class UploadBehavior extends Behavior
      * @var array
      */
     protected $filesToSave = [];
+    
+    /**
+     * @var array
+     */
+    protected $filesToDelete = [];
 
     /**
      * @param array $config
@@ -66,17 +71,29 @@ class UploadBehavior extends Behavior
         /** @var FileConfig $fileConfig */
         foreach ($this->getConfig('files', []) as $fileConfig) {
             /** @var UploadedFile|null|mixed $column */
-            $column = $entity->{$fileConfig->getColumn()};
-            if (!empty($column) && $column instanceof UploadedFile && $column->getError() === UPLOAD_ERR_OK) {
-                $pathinfo = pathinfo($column->getClientFilename());
-                $data = [
-                    'filename' => uniqid($fileConfig->getFilenamePrefix(), true) . '.' . $pathinfo['extension'],
-                    'path' => $fileConfig->getPath(),
-                ];
-                $this->filesToSave[$fileConfig->getColumn()] = $column;
-                $entity->{$fileConfig->getColumn()} = new FileContainer($data);
-            } else {
-                $entity->{$fileConfig->getColumn()} = null;
+            $column = $entity->get($fileConfig->getColumn());
+            if (!empty($column) && $column instanceof UploadedFile) {
+                switch ($column->getError()) {
+                    case UPLOAD_ERR_OK:
+                        $pathinfo = pathinfo($column->getClientFilename());
+                        $data = [
+                            'filename' => uniqid($fileConfig->getFilenamePrefix(), true) . '.' . $pathinfo['extension'],
+                            'path' => $fileConfig->getPath(),
+                        ];
+                        $this->filesToSave[$fileConfig->getColumn()] = $column;
+                        $entity->set($fileConfig->getColumn(), new FileContainer($data));
+                        if (!empty($entity->getOriginal($fileConfig->getColumn())) && $entity->getOriginal($fileConfig->getColumn()) instanceof FileContainer) {
+                            $this->filesToDelete[$fileConfig->getColumn()] = $entity->getOriginal($fileConfig->getColumn());
+                        }
+                        break;
+                    case UPLOAD_ERR_NO_FILE:
+                        $entity->set($fileConfig->getColumn(), $entity->getOriginal($fileConfig->getColumn()));
+                        $entity->setDirty($fileConfig->getColumn(), false);
+                        break;
+                    default:
+                        throw new FatalErrorException(UploadedFile::ERROR_MESSAGES[$column->getError()]);
+                        break;
+                }
             }
         }
     }
@@ -99,6 +116,9 @@ class UploadBehavior extends Behavior
                     mkdir($column->getPath(), 0777, true);
                 }
                 $uploadedFile->moveTo($column->getPathAndFile());
+            }
+            if (!empty($this->filesToDelete[$fileConfig->getColumn()]) && $this->filesToDelete[$fileConfig->getColumn()] instanceof FileContainer) {
+                $this->filesToDelete[$fileConfig->getColumn()]->delete();
             }
         }
     }

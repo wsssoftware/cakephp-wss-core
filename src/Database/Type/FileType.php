@@ -19,7 +19,7 @@ class FileType extends \Cake\Database\Type\BaseType
      */
     public function toDatabase($value, DriverInterface $driver)
     {
-       if (empty($value->getFilename()) || empty($value->getPath())) {
+       if (!$value instanceof FileContainer || empty($value->getFilename()) || empty($value->getPath())) {
            return null;
        }
        $data = [

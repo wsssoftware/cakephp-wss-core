@@ -4,6 +4,8 @@ declare(strict_types = 1);
 namespace Toolkit\Validation;
 
 
+use Cake\Utility\Text;
+
 class WSSValidator extends \Cake\Validation\Validator
 {
 
@@ -13,6 +15,7 @@ class WSSValidator extends \Cake\Validation\Validator
     public function __construct() {
         parent::__construct();
         $this->setProvider('wss', WSSValidation::class);
+        $this->setProvider('wss_upload', WSSValidationUpload::class);
     }
 
 
@@ -24,7 +27,7 @@ class WSSValidator extends \Cake\Validation\Validator
      * @param string|callable|null $when Either 'create' or 'update' or a callable that returns
      *   true when the validation rule should be applied.
      * @return $this
-     * @see \WSSCore\Validation\WSSValidation::isValidPhone()
+     * @see \Toolkit\Validation\WSSValidation::isValidPhone()
      */
     public function phone(string $field, ?string $message = null, $when = null)
     {
@@ -45,7 +48,7 @@ class WSSValidator extends \Cake\Validation\Validator
      * @param string|callable|null $when Either 'create' or 'update' or a callable that returns
      *   true when the validation rule should be applied.
      * @return $this
-     * @see \WSSCore\Validation\WSSValidation::isValidCellphone()
+     * @see \Toolkit\Validation\WSSValidation::isValidCellphone()
      */
     public function cellphone(string $field, ?string $message = null, $when = null)
     {
@@ -66,7 +69,7 @@ class WSSValidator extends \Cake\Validation\Validator
      * @param string|callable|null $when Either 'create' or 'update' or a callable that returns
      *   true when the validation rule should be applied.
      * @return $this
-     * @see \WSSCore\Validation\WSSValidation::isValidCpf()
+     * @see \Toolkit\Validation\WSSValidation::isValidCpf()
      */
     public function cpf(string $field, ?string $message = null, $when = null)
     {
@@ -87,7 +90,7 @@ class WSSValidator extends \Cake\Validation\Validator
      * @param string|callable|null $when Either 'create' or 'update' or a callable that returns
      *   true when the validation rule should be applied.
      * @return $this
-     * @see \WSSCore\Validation\WSSValidation::isValidCnpj()
+     * @see \Toolkit\Validation\WSSValidation::isValidCnpj()
      */
     public function cnpj(string $field, ?string $message = null, $when = null)
     {
@@ -108,7 +111,7 @@ class WSSValidator extends \Cake\Validation\Validator
      * @param string|callable|null $when Either 'create' or 'update' or a callable that returns
      *   true when the validation rule should be applied.
      * @return $this
-     * @see \WSSCore\Validation\WSSValidation::isValidCpfOrCnpj()
+     * @see \Toolkit\Validation\WSSValidation::isValidCpfOrCnpj()
      */
     public function cpfOrCnpj(string $field, ?string $message = null, $when = null)
     {
@@ -126,7 +129,7 @@ class WSSValidator extends \Cake\Validation\Validator
      * @param string $secondField The field you want to compare against.
      * @param string|null $message The error message when the rule fails.
      * @param string|callable|null $when Either 'create' or 'update' or a callable that returns
-     * @return \WSSCore\Validation\WSSValidator
+     * @return \Toolkit\Validation\WSSValidator
      */
     public function dateTimeLessThanField(string $field, string $secondField, ?string $message = null, $when = null)
     {
@@ -144,7 +147,7 @@ class WSSValidator extends \Cake\Validation\Validator
      * @param string $secondField The field you want to compare against.
      * @param string|null $message The error message when the rule fails.
      * @param string|callable|null $when Either 'create' or 'update' or a callable that returns
-     * @return \WSSCore\Validation\WSSValidator
+     * @return \Toolkit\Validation\WSSValidator
      */
     public function dateTimeGreaterThanField(string $field, string $secondField, ?string $message = null, $when = null)
     {
@@ -154,6 +157,38 @@ class WSSValidator extends \Cake\Validation\Validator
         return $this->add($field, 'dateTimeGreaterThanField', $extra + [
                 'rule' => ['isDateTimeGreaterThanField', $secondField],
                 'provider' => 'wss'
+            ]);
+    }
+
+    /**
+     * @param string $field
+     * @param array $mimeType
+     * @param string|null $message
+     * @param null $when
+     * @return \Toolkit\Validation\WSSValidator
+     */
+    public function validFileMimeTypes(string  $field, array $mimeType, ?string $message = null, $when = null)
+    {
+        $message = empty($message) ? __('O arquivo deve ser do tipo {0}', Text::toList($mimeType, __('ou'))) : $message;
+        $extra = array_filter(['on' => $when, 'message' => $message]);
+
+        return $this->add($field, 'validMimeType', $extra + [
+                'rule' => ['isValidMimeType', $mimeType],
+                'provider' => 'wss_upload',
+                'last' => true,
+            ]);
+    }
+
+    /**
+     * @param string $field
+     * @return \Toolkit\Validation\WSSValidator
+     */
+    public function validFileUnderServerConfiguration(string  $field)
+    {
+        return $this->add($field, 'validFileUnderServerConfiguration', [
+                'rule' => 'isValidFileUnderServerConfiguration',
+                'provider' => 'wss_upload',
+                'last' => true,
             ]);
     }
 }
