@@ -66,15 +66,12 @@ class WSSValidationUpload
      */
     public function isImageSize(UploadedFile $check, ?int $width, ?int $height)
     {
-        try {
-            $image = ImageManagerStatic::make($check->getStream());
-        } catch (NotReadableException $exception) {
-            return __('O arquivo não parece ser uma imagem');
-        } catch (\Exception $exception) {
-            return $exception->getMessage();
+        $imageSize = getimagesize($check->getStream()->getMetadata('uri'));
+        if ($imageSize === false) {
+            return __('Falha ao descobrir o tamanho da imagem');
         }
-        $imageWidth = $image->getWidth();
-        $imageHeight = $image->getHeight();
+        $imageWidth = $imageSize[0];
+        $imageHeight = $imageSize[1];
         if (!empty($width) && !empty($height) && ($width !== $imageWidth || $height !== $imageHeight)) {
             $size = Number::format($width) . "x" . Number::format($height);
             $imageSize = Number::format($imageWidth) . "x" . Number::format($imageHeight);
