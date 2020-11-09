@@ -200,14 +200,33 @@ class WSSValidator extends \Cake\Validation\Validator
      * @param string $field
      * @param int|null $width
      * @param int|null $height
+     * @param bool $ignoreIfNotImage
      * @param null $when
      * @return \Toolkit\Validation\WSSValidator
      */
-    public function imageSize(string  $field, ?int $width, ?int $height, $when = null)
+    public function imageSize(string  $field, ?int $width, ?int $height, bool $ignoreIfNotImage = false, $when = null)
     {
         $extra = array_filter(['on' => $when]);
         return $this->add($field, 'imageSize', $extra + [
-                'rule' => ['isImageSize', $width, $height],
+                'rule' => ['isImageSize', $width, $height, $ignoreIfNotImage],
+                'provider' => 'wss_upload',
+                'last' => true,
+            ]);
+    }
+
+    /**
+     * @param string $field
+     * @param int|null $width
+     * @param int|null $height
+     * @param bool $ignoreIfNotVideo
+     * @param null $when
+     * @return \Toolkit\Validation\WSSValidator
+     */
+    public function videoSize(string  $field, ?int $width, ?int $height, bool $ignoreIfNotVideo = false, $when = null)
+    {
+        $extra = array_filter(['on' => $when]);
+        return $this->add($field, 'videoSize', $extra + [
+                'rule' => ['isVideoSize', $width, $height, $ignoreIfNotVideo],
                 'provider' => 'wss_upload',
                 'last' => true,
             ]);

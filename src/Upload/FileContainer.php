@@ -15,6 +15,8 @@ use finfo;
 use Laminas\Diactoros\Stream;
 use Laminas\Diactoros\UploadedFile;
 use Psr\Http\Message\StreamInterface;
+use RuntimeException;
+use SplFileObject;
 use Symfony\Component\Finder\SplFileInfo;
 
 class FileContainer
@@ -115,44 +117,62 @@ class FileContainer
     }
 
     /**
+     * @return \SplFileObject|null
+     */
+    private function getSplFileObject(): ?SplFileObject
+    {
+        try {
+            $file = new SplFileObject($this->getPathAndFile());
+        } catch (RuntimeException $exception) {
+            return null;
+        }
+        return $file;
+    }
+
+    /**
      * @return string
      */
     public function getMimeType(): string
     {
-        $file = new \SplFileObject($this->getPathAndFile());
-        $finfo = new finfo(FILEINFO_MIME);
-
-        $file->fseek(0);
-        return $finfo->buffer(
-            $file->fread($file->getSize()),
-            FILEINFO_MIME_TYPE
-        );
+       return mime_content_type($this->getPathAndFile());
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getSize(): int
+    public function getSize(): ?int
     {
-        $file = new \SplFileObject($this->getPathAndFile());
+
+        $file = $this->getSplFileObject();
+        if (empty($file)) {
+            return null;
+        }
         return $file->getSize();
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getLastModified(): int
+    public function getLastModified(): ?int
     {
-        $file = new \SplFileObject($this->getPathAndFile());
+
+        $file = $this->getSplFileObject();
+        if (empty($file)) {
+            return null;
+        }
         return $file->getMTime();
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getExtension(): string
+    public function getExtension(): ?string
     {
-        $file = new \SplFileObject($this->getPathAndFile());
+
+        $file = $this->getSplFileObject();
+        if (empty($file)) {
+            return null;
+        }
         return $file->getExtension();
     }
 

@@ -18,7 +18,7 @@ class WSSValidation
      * @param string $check
      * @return boolean
      */
-    public function isValidPhone(string $check)
+    public static function isValidPhone(string $check)
     {
         if (strlen($check) === 10) {
             $pattern = '/^(|[1-9]{2}[1-5]{1}[0-9]{3}[0-9]{4})$/';
@@ -35,7 +35,7 @@ class WSSValidation
      * @param string $check
      * @return boolean
      */
-    public function isValidCellphone(string $check)
+    public static function isValidCellphone(string $check)
     {
         return (bool)preg_match('/^(|[1-9]{2}[9][1-9]{1}[0-9]{3}[0-9]{4})$/', $check);
     }
@@ -46,7 +46,7 @@ class WSSValidation
      * @param string $check
      * @return boolean
      */
-    public function isValidCpfOrCnpj(string $check)
+    public static function isValidCpfOrCnpj(string $check)
     {
         if (strlen($check) <= 11) {
             return self::isValidCpf($check);
@@ -61,7 +61,7 @@ class WSSValidation
      * @param string $check
      * @return boolean
      */
-    public function isValidCpf(string $check)
+    public static function isValidCpf(string $check)
     {
         return Validate::cpf($check);
     }
@@ -72,7 +72,7 @@ class WSSValidation
      * @param string $check
      * @return boolean
      */
-    public function isValidCnpj(string $check)
+    public static function isValidCnpj(string $check)
     {
         return Validate::cnpj($check);
     }
@@ -88,7 +88,7 @@ class WSSValidation
      * @return bool
      * @since 3.6.0
      */
-    public function isDateTimeLessThanField($check, string $field, array $context): bool
+    public static function isDateTimeLessThanField($check, string $field, array $context): bool
     {
         if (!isset($context['data']) || !array_key_exists($field, $context['data'])) {
             return false;
@@ -117,7 +117,7 @@ class WSSValidation
      * @return bool
      * @since 3.6.0
      */
-    public function isDateTimeGreaterThanField($check, string $field, array $context): bool
+    public static function isDateTimeGreaterThanField($check, string $field, array $context): bool
     {
         if (!isset($context['data']) || !array_key_exists($field, $context['data'])) {
             return false;
