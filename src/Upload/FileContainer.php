@@ -176,4 +176,16 @@ class FileContainer
         return $file->getExtension();
     }
 
+    /**
+     * @return string|null
+     */
+    public function getFileMd5(): ?string
+    {
+        if (!is_file($this->getPathAndFile())) {
+            return null;
+        }
+
+        return md5_file($this->getPathAndFile());
+    }
+
 }
