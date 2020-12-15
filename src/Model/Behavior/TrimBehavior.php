@@ -3,9 +3,12 @@ declare(strict_types=1);
 
 namespace Toolkit\Model\Behavior;
 
+use ArrayObject;
+use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
 use Cake\ORM\Behavior;
 use Cake\ORM\Table;
+
 
 /**
  * Trim behavior
