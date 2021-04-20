@@ -122,20 +122,22 @@ abstract class AbstractTable
             $model = (new \ReflectionClass($this))->getShortName();
         }
         $this->_repository = TableRegistry::getTableLocator()->get($model);
-        $this->define();
 
         $this->_loadingText = __('Carregando') . '...';
         $this->_loadingErrorText = __('Algo deu errado ao carregar a tabela! Tente atualizar a página.');
         $this->initialize();
+        $this->define();
     }
 
     /**
      * Initialize method
      */
-    public function initialize()
-    {
+    abstract public function initialize(): void;
 
-    }
+    /**
+     * Define the table configuration
+     */
+    abstract public function define(): void;
 
     /**
      * @param string $name
@@ -148,11 +150,6 @@ abstract class AbstractTable
             'config' => $config
         ];
     }
-
-    /**
-     * Define the table configuration
-     */
-    abstract public function define(): void;
 
     /**
      * Get the table query

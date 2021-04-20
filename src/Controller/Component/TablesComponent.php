@@ -57,6 +57,9 @@ class TablesComponent extends Component
     public function paginate(AbstractTable $table, array $settings = []): void
     {
         $settings['scope'] = $table->getScope();
+        if ($table->getDefaultPageLimit() !== null) {
+            $settings['limit'] = $table->getDefaultPageLimit();
+        }
         $query = $table->getQuery();
         $searchQuery = $this->getController()->getRequest()->getQuery($settings['scope'] . '.query');
         if (!empty($searchQuery)) {
@@ -79,11 +82,13 @@ class TablesComponent extends Component
                 $query->where($searchWhere);
             }
         }
-        $table->setResultSet($this->Paginator->paginate($query, $settings));
-        $this->_tableConfigs[$table->getScope()] = $table;
         if (!empty($settings['limit'])) {
+            $maxLimit = $this->Paginator->getConfig('maxLimit');
+            $settings['maxLimit'] = $maxLimit >= $settings['limit'] ? $maxLimit : $settings['limit'];
             $table->setDefaultPageLimit($settings['limit']);
         }
+        $table->setResultSet($this->Paginator->paginate($query, $settings));
+        $this->_tableConfigs[$table->getScope()] = $table;
     }
 
     /**
