@@ -13,6 +13,7 @@ use Cake\ORM\Entity;
 use Cake\ORM\Query;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 use Cake\View\View;
 use InvalidArgumentException;
@@ -33,6 +34,11 @@ abstract class AbstractTable
      * @var \Cake\View\View
      */
     protected View $_view;
+
+    /**
+     * @var array
+     */
+    protected array $_helpers = [];
 
     /**
      * @var \Cake\ORM\Entity
@@ -120,6 +126,27 @@ abstract class AbstractTable
 
         $this->_loadingText = __('Carregando') . '...';
         $this->_loadingErrorText = __('Algo deu errado ao carregar a tabela! Tente atualizar a página.');
+        $this->initialize();
+    }
+
+    /**
+     * Initialize method
+     */
+    public function initialize()
+    {
+
+    }
+
+    /**
+     * @param string $name
+     * @param array $config
+     */
+    public function loadHelper(string $name, array $config = []): void
+    {
+        $this->_helpers[] = [
+            'name' => $name,
+            'config' => $config
+        ];
     }
 
     /**
@@ -350,6 +377,9 @@ abstract class AbstractTable
     public function setView(View $view): void
     {
         $this->_view = $view;
+        foreach ($this->_helpers as $helper) {
+            $this->_view->loadHelper(Hash::get($helper, 'name'), Hash::get($helper, 'config'));
+        }
     }
 
     /**

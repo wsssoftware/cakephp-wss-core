@@ -16,7 +16,9 @@ declare(strict_types=1);
  */
 namespace Toolkit\View;
 
+use AppCore\View\AppView;
 use Cake\Core\Configure;
+use Cake\View\View;
 use RuntimeException;
 
 /**
@@ -24,7 +26,7 @@ use RuntimeException;
  * Currently only switches the default layout and sets the response type -
  * which just maps to text/html by default.
  */
-class TableView extends AppView
+class TableView extends View
 {
 
     /**
@@ -66,6 +68,7 @@ class TableView extends AppView
     public function initialize(): void
     {
         parent::initialize();
+       $this->loadHelper('Toolkit.Tables');
     }
 
     /**

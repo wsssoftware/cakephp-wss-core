@@ -1,0 +1,39 @@
+.pagination {
+  .page-item {
+    .page-link {
+      color: $color;
+      border-color: $color;
+    }
+
+
+    &.active {
+      .page-link {
+        color: #fff;
+        background-color: $color;
+        border-color: $color;
+
+        &:hover,
+        &:focus {
+          background-color: $color;
+        }
+      }
+    }
+
+    .page-link {
+      &:hover,
+      &:focus {
+        background-color: $color;
+        border-color: $color;
+        color: #fff;
+      }
+    }
+
+    &.disabled {
+      cursor: not-allowed;
+      .page-link {
+        color: $gray-400;
+        border-color: $gray-400;
+      }
+    }
+  }
+}

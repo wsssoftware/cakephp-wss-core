@@ -45,7 +45,7 @@ class TablesHelper extends Helper
             'emptyBody' => '<tr><td{{attrs}}>{{content}}</th></tr>',
             'tbody' => '<tbody>{{content}}</tbody>',
             'pageLimitItem' => '<a class="dropdown-item table-filter-link" href="{{url}}">{{label}}</a>',
-            'pageLimit' => '<div class="input-group-append"><button type="button" class="btn btn-markethelp" data-toggle="dropdown" aria-expanded="false">{{label}} <span class="caret"></span></button><div class="dropdown-menu">{{items}}</div></div>',
+            'pageLimit' => '<div class="input-group-append"><button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" data-toggle="dropdown" aria-expanded="false">{{label}} <span class="caret"></span></button><div class="dropdown-menu">{{items}}</div></div>',
             'searchInput' => '<div class="col-12"><div class="input-group">{{pageLimit}}<input type="text" value="{{value}}" data-scope="{{scope}}" id="{{id}}" class="form-control table-search-input" placeholder="{{placeholder}}"></div></div>',
             'search' => '<div class="col-sm-12 col-md-12 col-lg-7 col-xl-4"><div class="form-group row mb-2">{{label}}{{input}}</div></div>',
             'info' => '<div class="col-sm-12 col-md-12 col-lg-5 col-xl-8"><div class="d-flex h-100 align-items-end"><p class="mb-1 ml-1">{{content}}</p></div></div>',
@@ -129,6 +129,7 @@ class TablesHelper extends Helper
             return $tableWrapper;
         } else {
             $this->getView()->Html->script('Toolkit.table.min.js', ['block' => 'script']);
+            $this->getView()->Html->css('Toolkit.table.min.css', ['block' => 'css']);
         }
 
         $mainWrapperAttributes = [

@@ -1,0 +1,122 @@
+@charset "UTF-8";
+.system-table thead th {
+  background: #273c75;
+  color: #fff;
+}
+.system-table thead th.table-title {
+  text-align: center;
+  font-weight: bold;
+  background: #34509b;
+}
+.system-table thead th.th-asc, .system-table thead th.th-desc {
+  background: #0e1529;
+}
+.system-table thead th a {
+  display: table;
+  position: relative;
+  width: 100% !important;
+  height: 100%;
+  color: #e9ecef;
+}
+.system-table thead th a:after {
+  font-family: "Font Awesome 5 Pro";
+  content: "";
+  margin-left: 5px;
+}
+.system-table thead th a.asc:after {
+  content: "";
+}
+.system-table thead th a.desc:after {
+  content: "";
+}
+
+.system-table.table-striped > tbody > tr:nth-child(odd), .system-table.table-striped > tbody > tr:nth-child(odd) {
+  background-color: white;
+}
+.system-table tbody tr td.no-records {
+  text-align: center;
+  font-weight: bold;
+  padding: 12px;
+  font-size: 15px;
+  text-transform: uppercase;
+}
+.system-table.table-hover tbody tr:hover {
+  background: #b5c2e6 !important;
+}
+
+.pagination .page-item .page-link {
+  color: #273c75;
+  border-color: #273c75;
+}
+.pagination .page-item.active .page-link {
+  color: #fff;
+  background-color: #273c75;
+  border-color: #273c75;
+}
+.pagination .page-item.active .page-link:hover, .pagination .page-item.active .page-link:focus {
+  background-color: #273c75;
+}
+.pagination .page-item .page-link:hover, .pagination .page-item .page-link:focus {
+  background-color: #273c75;
+  border-color: #273c75;
+  color: #fff;
+}
+.pagination .page-item.disabled {
+  cursor: not-allowed;
+}
+.pagination .page-item.disabled .page-link {
+  color: #ced4da;
+  border-color: #ced4da;
+}
+
+.system-table-container .table-responsive .table-loading-overlay,
+.system-table-container .table-responsive .table-loading-error-overlay {
+  visibility: hidden;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+  display: flex;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 5;
+}
+.system-table-container .table-responsive .table-loading-overlay span,
+.system-table-container .table-responsive .table-loading-error-overlay span {
+  padding: 8px 15px;
+  border-radius: 8px;
+  color: #f8f9fa;
+  font-size: 20px;
+  font-weight: bolder;
+  z-index: 10;
+}
+.system-table-container .table-responsive.table-loading, .system-table-container .table-responsive.table-loading-error {
+  position: relative;
+}
+.system-table-container .table-responsive.table-loading .table-loading-overlay {
+  visibility: visible;
+  cursor: wait;
+  display: flex;
+  background: rgba(39, 60, 117, 0.5);
+}
+.system-table-container .table-responsive.table-loading .table-loading-overlay span {
+  box-shadow: 0 0 5px black;
+  background: #34509b;
+}
+.system-table-container .table-responsive.table-loading-error .table-loading-error-overlay {
+  visibility: visible;
+  cursor: not-allowed;
+  display: flex;
+  background: rgba(234, 67, 53, 0.5);
+}
+.system-table-container .table-responsive.table-loading-error .table-loading-error-overlay span {
+  box-shadow: 0 0 5px #bd2130;
+  background: #dc3545;
+}
+
+/*# sourceMappingURL=table.css.map */
