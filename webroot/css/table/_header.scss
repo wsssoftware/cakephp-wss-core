@@ -4,14 +4,10 @@
       &.table-title {
         text-align: center;
         font-weight: bold;
-        background: $color-400;
       }
-      background: $color-500;
-      color: #fff;
 
       &.th-asc,
       &.th-desc {
-        background: $color-700;
       }
 
       a {
@@ -19,7 +15,6 @@
         position: relative;
         width: 100% !important;
         height: 100%;
-        color: $gray-200;
         &:after {
           font-family: "Font Awesome 5 Pro";
           content: "\f883";

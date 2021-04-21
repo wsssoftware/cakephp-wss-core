@@ -21,7 +21,6 @@
       span {
         padding: 8px 15px;
         border-radius: 8px;
-        color: $gray-100;
         font-size: 20px;
         font-weight: bolder;
         z-index: 10;
@@ -38,10 +37,7 @@
         visibility: visible;
         cursor: wait;
         display: flex;
-        background: rgba(39, 60, 117, 0.5);
         span {
-          box-shadow: 0 0 5px $color-900;
-          background: $color-400;
         }
       }
     }
@@ -51,11 +47,8 @@
         visibility: visible;
         cursor: not-allowed;
         display: flex;
-        background: rgba(234, 67, 53, 0.5);
 
         span {
-          box-shadow: 0 0 5px darken($danger, 10);
-          background: $danger;
         }
       }
     }

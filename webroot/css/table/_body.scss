@@ -1,7 +1,7 @@
 .system-table {
   &.table-striped > tbody > tr:nth-child(odd),
   &.table-striped > tbody > tr:nth-child(odd) {
-    background-color: lighten($color-50, 25);
+
   }
 
   tbody {
@@ -22,7 +22,7 @@
     tbody {
       tr {
         &:hover {
-          background: $color-50 !important;
+
         }
       }
     }
