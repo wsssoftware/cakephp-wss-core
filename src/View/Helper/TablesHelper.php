@@ -44,7 +44,7 @@ class TablesHelper extends Helper
             'td' => '<td{{attrs}}>{{content}}</th>',
             'emptyBody' => '<tr><td{{attrs}}>{{content}}</th></tr>',
             'tbody' => '<tbody>{{content}}</tbody>',
-            'pageLimitItem' => '<a class="dropdown-item table-filter-link" href="{{url}}">{{label}}</a>',
+            'pageLimitItem' => '<a href="{{url}}"{{attrs}}>{{label}}</a>',
             'pageLimit' => '<div class="input-group-append"><button type="button" class="btn btn-table dropdown-toggle" data-bs-toggle="dropdown" data-toggle="dropdown" aria-expanded="false">{{label}} <span class="caret"></span></button><div class="dropdown-menu">{{items}}</div></div>',
             'searchInput' => '<div class="col-12"><div class="input-group">{{pageLimit}}<input type="text" value="{{value}}" data-scope="{{scope}}" id="{{id}}" class="form-control table-search-input" placeholder="{{placeholder}}"></div></div>',
             'search' => '<div class="col-sm-12 col-md-12 col-lg-7 col-xl-4"><div class="form-group row mb-2">{{label}}{{input}}</div></div>',
@@ -247,12 +247,18 @@ class TablesHelper extends Helper
         $currentPageLimitLabel = __n('{0} registro por página', '{0} registros por página', $currentPageLimit, $currentPageLimit);
         $pageLimitItems = '';
         foreach ($table->getPageLimitOptions() as $pageLimitOption) {
+            $options = [
+                'class' => 'dropdown-item table-filter-link',
+            ];
+            $url = $this->Paginator->generateUrl(['limit' => $pageLimitOption, 'page' => 1], $table->getRepository()->getAlias());
             if ($pageLimitOption === $currentPageLimit) {
-                continue;
+                $options['class'] .= ' active';
+                $url = 'javascript:void(0);';
             }
             $pageLimitItems .= $this->formatTemplate('pageLimitItem', [
-                'url' => $this->Paginator->generateUrl(['limit' => $pageLimitOption, 'page' => 1], $table->getRepository()->getAlias()),
-                'label' => __n('{0} registro por página', '{0} registros por página', $pageLimitOption, $pageLimitOption)
+                'url' => $url,
+                'label' => __n('{0} registro por página', '{0} registros por página', $pageLimitOption, $pageLimitOption),
+                'attrs' => $this->templater()->formatAttributes($options),
             ]);
         }
         $pageLimit = $this->formatTemplate('pageLimit', [

@@ -125,14 +125,8 @@ abstract class AbstractTable
 
         $this->_loadingText = __('Carregando') . '...';
         $this->_loadingErrorText = __('Algo deu errado ao carregar a tabela! Tente atualizar a página.');
-        $this->initialize();
         $this->define();
     }
-
-    /**
-     * Initialize method
-     */
-    abstract public function initialize(): void;
 
     /**
      * Define the table configuration

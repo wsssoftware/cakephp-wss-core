@@ -1,0 +1,82 @@
+{#
+/**
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ *
+ * Licensed under The MIT License
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @since         2.0.0
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ */
+#}
+<?php
+declare(strict_types=1);
+
+namespace {{ namespace }}\Tables;
+
+{% set uses = ["use #{ namespace }\\View\\AppView;", 'use Cake\\ORM\\Entity;', 'use Cake\\ORM\\Query;', 'use Cake\\Utility\\Text;', 'use Cake\\View\\View;', 'use Toolkit\\Tables\\AbstractTable;', "use #{entityFQN};", 'use Toolkit\\View\\TableView;'] %}
+{{ uses|join('\n')|raw }}
+
+{{ DocBlock.classDescription(name, 'Table', [])|raw }}
+class {{ name }} extends AbstractTable
+{
+{% if table %}
+
+    /**
+     * @var string|null
+     */
+    protected ?string $_repositoryName = '{{ table }}';
+{% endif %}
+
+    public function define(): void
+    {
+        // TODO: to configure table.
+
+        $this
+{% for field in fields %}
+            ->addDatabaseColumn('{{ tableName }}.{{ field.name }}', __('{{ field.name|humanize }}'))
+{% endfor %}
+            ->addNonDatabaseColumn('action', __('Actions'));
+    }
+
+    /**
+     * @inheritDoc
+     * @return \Cake\ORM\Query
+     */
+    public function getQuery(): Query
+    {
+        return $this->_repository->find();
+    }
+
+{% for field in fields %}
+    /**
+     * Get Html table for field '{{ field.name }}'
+     *
+     * @param mixed $value A value from database.
+     * @param TableView|AppView|View $view View to use helpers and other functions.
+     * @param Log|Entity $entity Entity to get access to other fields.
+     * @return string You must return a string.
+     */
+    protected function _getColumn{{ loop.index0 }}(mixed $value, TableView|AppView|View $view, {{ entity }}|Entity $entity): string {
+
+{%- if field.type in ['int', 'biginteger', 'decimal', 'float'] %}
+
+        return $view->Number->format($value);
+{% elseif field.type in ['text'] %}
+
+        return $view->Text->truncate(strval(h($value)), 100);
+{% elseif field.type in ['string'] %}
+
+        return strval(h($value));
+{% else %}
+
+        return strval(h($value));
+{% endif %}
+    }
+
+{% endfor %}
+}

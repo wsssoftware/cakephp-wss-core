@@ -57,6 +57,24 @@ $table-color-900:  darken($table-color, 40) !default;
     box-shadow: 0 0 0 0.25rem rgba(red($table-color), green($table-color), blue($table-color), 0.25);
   }
 
+  .dropdown-item {
+    color: $table-color-700;
+    &:hover, &:focus {
+      color: $table-color-600;
+      background-color: $table-color-50 !important;
+    }
+
+    &.active, &:active {
+      color: $table-light;
+      text-decoration: none;
+      background-color: $table-color;
+      cursor: no-drop;
+      &:hover, &:focus {
+        background: lighten($table-color, 5) !important;
+      }
+    }
+  }
+
   .table-responsive {
     .system-table {
       &.table-striped > tbody > tr:nth-child(odd),
