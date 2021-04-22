@@ -1,68 +1,74 @@
 @import 'color-helper';
 
-$white:    #fff !default;
-$gray-100: #f8f9fa !default;
-$gray-200: #e9ecef !default;
-$gray-300: #dee2e6 !default;
-$gray-400: #ced4da !default;
-$gray-500: #adb5bd !default;
-$gray-600: #6c757d !default;
-$gray-700: #495057 !default;
-$gray-800: #343a40 !default;
-$gray-900: #212529 !default;
-$black:    #000 !default;
+$table-white:    #fff !default;
+$table-gray-100: #f8f9fa !default;
+$table-gray-200: #e9ecef !default;
+$table-gray-300: #dee2e6 !default;
+$table-gray-400: #ced4da !default;
+$table-gray-500: #adb5bd !default;
+$table-gray-600: #6c757d !default;
+$table-gray-700: #495057 !default;
+$table-gray-800: #343a40 !default;
+$table-gray-900: #212529 !default;
+$table-black:    #000 !default;
 
-$blue:    #007bff !default;
-$indigo:  #6610f2 !default;
-$purple:  #6f42c1 !default;
-$pink:    #e83e8c !default;
-$red:     #dc3545 !default;
-$orange:  #fd7e14 !default;
-$yellow:  #ffc107 !default;
-$green:   #28a745 !default;
-$teal:    #20c997 !default;
-$cyan:    #17a2b8 !default;
+$table-blue:    #007bff !default;
+$table-indigo:  #6610f2 !default;
+$table-purple:  #6f42c1 !default;
+$table-pink:    #e83e8c !default;
+$table-red:     #dc3545 !default;
+$table-orange:  #fd7e14 !default;
+$table-yellow:  #ffc107 !default;
+$table-green:   #28a745 !default;
+$table-teal:    #20c997 !default;
+$table-cyan:    #17a2b8 !default;
 
-$primary:       $blue !default;
-$secondary:     $gray-600 !default;
-$success:       $green !default;
-$info:          $cyan !default;
-$warning:       $yellow !default;
-$danger:        $red !default;
-$light:         $gray-100 !default;
-$dark:          $gray-800 !default;
+$table-primary: $table-blue !default;
+$table-secondary: $table-gray-600 !default;
+$table-success: $table-green !default;
+$table-info: $table-cyan !default;
+$table-warning: $table-yellow !default;
+$table-danger: $table-red !default;
+$table-light: $table-gray-100 !default;
+$table-dark: $table-gray-800 !default;
 
-$color: #273c75 !default;
+$table-color: #273c75 !default;
 
-$color-50:   lighten($color, 50) !default;
-$color-100:  lighten($color, 40) !default;
-$color-200:  lighten($color, 30) !default;
-$color-300:  lighten($color, 20) !default;
-$color-400:  lighten($color, 10) !default;
-$color-500:  $color !default;
-$color-600:  darken($color, 10) !default;
-$color-700:  darken($color, 20) !default;
-$color-800:  darken($color, 30) !default;
-$color-900:  darken($color, 40) !default;
+$table-color-50:   lighten($table-color, 50) !default;
+$table-color-100:  lighten($table-color, 40) !default;
+$table-color-200:  lighten($table-color, 30) !default;
+$table-color-300:  lighten($table-color, 20) !default;
+$table-color-400:  lighten($table-color, 10) !default;
+$table-color-500: $table-color !default;
+$table-color-600:  darken($table-color, 10) !default;
+$table-color-700:  darken($table-color, 20) !default;
+$table-color-800:  darken($table-color, 30) !default;
+$table-color-900:  darken($table-color, 40) !default;
 
 .system-table-container {
 
   .btn-table {
-    @include button-variant($color, $color)
+    @include button-variant($table-color, $table-color)
+  }
+
+  .form-control:focus {
+    color: $table-color-700;
+    border-color: $table-color-300;
+    box-shadow: 0 0 0 0.25rem rgba(red($table-color), green($table-color), blue($table-color), 0.25);
   }
 
   .table-responsive {
     .system-table {
       &.table-striped > tbody > tr:nth-child(odd),
       &.table-striped > tbody > tr:nth-child(odd) {
-        background-color: lighten($color-50, 25) !important;
+        background-color: lighten($table-color-50, 18) !important;
       }
 
       &.table-hover {
         tbody {
           tr {
             &:hover {
-              background: $color-50 !important;
+              background: $table-color-50 !important;
             }
           }
         }
@@ -71,18 +77,18 @@ $color-900:  darken($color, 40) !default;
       thead {
         th {
           &.table-title {
-            background: $color-400;
+            background: $table-color-600;
           }
-          background: $color-500;
-          color: #fff;
+          background: $table-color-500;
+          color: $table-light;
 
           &.th-asc,
           &.th-desc {
-            background: $color-700;
+            background: $table-color-400;
           }
 
           a {
-            color: $gray-200;
+            color: $table-gray-200;
           }
         }
       }
@@ -92,27 +98,27 @@ $color-900:  darken($color, 40) !default;
     .table-loading-overlay,
     .table-loading-error-overlay {
       span {
-        color: $gray-100;
+        color: $table-gray-100;
       }
     }
 
     &.table-loading {
       .table-loading-overlay {
-        background: rgba(39, 60, 117, 0.5);
+        background: rgba(red($table-color), green($table-color), blue($table-color), 0.5);
         span {
-          box-shadow: 0 0 5px $color-900;
-          background: $color-400;
+          box-shadow: 0 0 5px $table-color-900;
+          background: $table-color-400;
         }
       }
     }
 
     &.table-loading-error {
       .table-loading-error-overlay {
-        background: rgba(234, 67, 53, 0.5);
+        background: rgba(red($table-danger), green($table-danger), blue($table-danger), 0.5);
 
         span {
-          box-shadow: 0 0 5px darken($danger, 10);
-          background: $danger;
+          box-shadow: 0 0 5px darken($table-danger, 10);
+          background: $table-danger;
         }
       }
     }
@@ -122,20 +128,20 @@ $color-900:  darken($color, 40) !default;
   .pagination {
     .page-item {
       .page-link {
-        color: $color;
-        border-color: $color;
+        color: $table-color;
+        border-color: $table-color;
       }
 
 
       &.active {
         .page-link {
-          color: #fff;
-          background-color: $color;
-          border-color: $color;
+          color: $table-light;
+          background-color: $table-color;
+          border-color: $table-color;
 
           &:hover,
           &:focus {
-            background-color: $color;
+            background-color: $table-color;
           }
         }
       }
@@ -143,16 +149,16 @@ $color-900:  darken($color, 40) !default;
       .page-link {
         &:hover,
         &:focus {
-          background-color: $color;
-          border-color: $color;
-          color: #fff;
+          background-color: $table-color;
+          border-color: $table-color;
+          color: $table-light;
         }
       }
 
       &.disabled {
         .page-link {
-          color: $gray-400;
-          border-color: $gray-400;
+          color: $table-gray-400;
+          border-color: $table-gray-400;
         }
       }
     }
