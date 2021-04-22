@@ -13,6 +13,7 @@ use Cake\ORM\Entity;
 use Cake\ORM\Query;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 use Cake\View\View;
@@ -21,7 +22,6 @@ use ReflectionClass;
 
 abstract class AbstractTable
 {
-
 
     /**
      * Holds a cached list of getters/setters per class
@@ -77,11 +77,6 @@ abstract class AbstractTable
     /**
      * @var string|null
      */
-    protected ?string $_searchTitle = null;
-
-    /**
-     * @var string|null
-     */
     protected ?string $_searchPlaceholder = null;
 
     /**
@@ -112,6 +107,16 @@ abstract class AbstractTable
     ];
 
     /**
+     * @var string|null
+     */
+    public ?string $_defaultFilter = null;
+
+    /**
+     * @var array
+     */
+    public array $_filters = [];
+
+    /**
      * TableAbstract constructor.
      */
     public function __construct()
@@ -119,7 +124,7 @@ abstract class AbstractTable
         if (!empty($this->_repositoryName)) {
             $model = $this->_repositoryName;
         } else {
-            $model = (new \ReflectionClass($this))->getShortName();
+            $model = (new ReflectionClass($this))->getShortName();
         }
         $this->_repository = TableRegistry::getTableLocator()->get($model);
 
@@ -143,6 +148,25 @@ abstract class AbstractTable
             'name' => $name,
             'config' => $config
         ];
+    }
+
+    /**
+     * @return \Cake\ORM\Query
+     */
+    public function getFinalQuery(): Query
+    {
+        $query = $this->getQuery();
+        $model =Inflector::tableize($this->getRepository()->getAlias());
+        $filter = Router::getRequest()->getQuery($model . '.filter', false);
+        if ($filter !== false && is_string($filter) && !empty($this->_filters[$filter])) {
+            $methodName = 'filter' . Inflector::camelize($filter);
+            if (!method_exists($this, $methodName)) {
+                throw new FatalErrorException(sprintf('You must create the method \'%s\' in your table class.', $methodName));
+            }
+            $this->{$methodName}($query);
+        }
+
+        return $query;
     }
 
     /**
@@ -207,6 +231,7 @@ abstract class AbstractTable
 
     /**
      * @param \Cake\Datasource\ResultSetInterface $resultSet
+     * @internal You shouldn't use this method.
      */
     public function setResultSet(ResultSetInterface $resultSet): void
     {
@@ -223,10 +248,13 @@ abstract class AbstractTable
 
     /**
      * @param string $loadingText
+     * @return self
      */
-    public function setLoadingText(string $loadingText): void
+    public function setLoadingText(string $loadingText): self
     {
         $this->_loadingText = $loadingText;
+
+        return $this;
     }
 
     /**
@@ -239,10 +267,66 @@ abstract class AbstractTable
 
     /**
      * @param string $loadingErrorText
+     * @return self
      */
-    public function setLoadingErrorText(string $loadingErrorText): void
+    public function setLoadingErrorText(string $loadingErrorText): self
     {
         $this->_loadingErrorText = $loadingErrorText;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDefaultFilter(): ?string
+    {
+        return $this->_defaultFilter;
+    }
+
+    /**
+     * @param string|null $defaultFilter
+     * @return self
+     */
+    public function setDefaultFilter(?string $defaultFilter): self
+    {
+        $this->_defaultFilter = $defaultFilter;
+        if (empty($this->_filters)) {
+            throw new FatalErrorException('You must to set filters before use this method');
+        }
+        if (!in_array($defaultFilter, $this->_filters)) {
+            throw new FatalErrorException('You must to set a configured filter.');
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFilters(): array
+    {
+        return $this->_filters;
+    }
+
+    /**
+     * @param array $filters
+     * @return self
+     */
+    public function setFilters(array $filters): self
+    {
+        foreach ($filters as $key => $filter) {
+            if (!is_string($key)) {
+                throw new FatalErrorException('Filter name must to be a string.');
+            }
+            if (!is_string($filter)) {
+                throw new FatalErrorException('Filter label must to be a string.');
+            }
+        }
+        asort($filters);
+        $this->_filters = $filters;
+
+        return $this;
     }
 
     /**
@@ -260,10 +344,22 @@ abstract class AbstractTable
 
     /**
      * @param array|int[] $_pageLimitOptions
+     * @return self
      */
-    public function setPageLimitOptions(array $_pageLimitOptions): void
+    public function setPageLimitOptions(array $_pageLimitOptions): self
     {
+        if (empty($_pageLimitOptions)) {
+            throw new FatalErrorException('You can\'t pass a empty array to page limit options.');
+        }
+        foreach ($_pageLimitOptions as $pageLimitOption) {
+            if (!is_int($pageLimitOption) || $pageLimitOption <= 0) {
+                throw new FatalErrorException('Page limit options must to be a array of positive integers.');
+            }
+        }
+        sort($_pageLimitOptions);
         $this->_pageLimitOptions = $_pageLimitOptions;
+
+        return $this;
     }
 
     /**
@@ -276,10 +372,13 @@ abstract class AbstractTable
 
     /**
      * @param int|null $defaultPageLimit
+     * @return self
      */
-    public function setDefaultPageLimit(?int $defaultPageLimit): void
+    public function setDefaultPageLimit(?int $defaultPageLimit): self
     {
         $this->_defaultPageLimit = $defaultPageLimit;
+
+        return $this;
     }
 
     /**
@@ -314,22 +413,6 @@ abstract class AbstractTable
     /**
      * @return string|null
      */
-    public function getSearchTitle(): ?string
-    {
-        return $this->_searchTitle;
-    }
-
-    /**
-     * @param string|null $searchTitle
-     */
-    public function setSearchTitle(?string $searchTitle): void
-    {
-        $this->_searchTitle = $searchTitle;
-    }
-
-    /**
-     * @return string|null
-     */
     public function getSearchPlaceholder(): ?string
     {
         return $this->_searchPlaceholder;
@@ -337,10 +420,13 @@ abstract class AbstractTable
 
     /**
      * @param string|null $searchPlaceholder
+     * @return self
      */
-    public function setSearchPlaceholder(?string $searchPlaceholder): void
+    public function setSearchPlaceholder(?string $searchPlaceholder): self
     {
         $this->_searchPlaceholder = $searchPlaceholder;
+
+        return $this;
     }
 
     /**
@@ -353,7 +439,7 @@ abstract class AbstractTable
 
     /**
      * @param array $tableAttributes
-     * @return $this
+     * @return self
      */
     public function setTableAttributes(array $tableAttributes): self
     {
@@ -364,6 +450,7 @@ abstract class AbstractTable
 
     /**
      * @param \Cake\View\View $view
+     * @internal You shouldn't use this method.
      */
     public function setView(View $view): void
     {
@@ -375,6 +462,7 @@ abstract class AbstractTable
 
     /**
      * @param \Cake\ORM\Entity $currentEntity
+     * @internal You shouldn't use this method.
      */
     public function setCurrentEntity(Entity $currentEntity): void
     {
@@ -406,6 +494,7 @@ abstract class AbstractTable
      * @param string $field the name of the field to retrieve
      * @return mixed
      * @throws \InvalidArgumentException if an empty field name is passed
+     * @internal You shouldn't use this method.
      */
     public function &get(string $field)
     {
@@ -427,7 +516,7 @@ abstract class AbstractTable
         $this->_currentTdAttributes = [];
         if ($method) {
             $tdAttributes = [];
-            $result = $this->{$method}($value, $this->_view, $this->_currentEntity, $tdAttributes);
+            $result = $this->{$method}($value, $this->_currentEntity, $tdAttributes);
             $this->_currentTdAttributes = $tdAttributes;
 
             return $result;

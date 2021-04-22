@@ -44,18 +44,18 @@ class TablesHelper extends Helper
             'td' => '<td{{attrs}}>{{content}}</th>',
             'emptyBody' => '<tr><td{{attrs}}>{{content}}</th></tr>',
             'tbody' => '<tbody>{{content}}</tbody>',
-            'pageLimitItem' => '<a href="{{url}}"{{attrs}}>{{label}}</a>',
-            'pageLimit' => '<div class="input-group-append"><button type="button" class="btn btn-table dropdown-toggle" data-bs-toggle="dropdown" data-toggle="dropdown" aria-expanded="false">{{label}} <span class="caret"></span></button><div class="dropdown-menu">{{items}}</div></div>',
-            'searchInput' => '<div class="col-12"><div class="input-group">{{pageLimit}}<input type="text" value="{{value}}" data-scope="{{scope}}" id="{{id}}" class="form-control table-search-input" placeholder="{{placeholder}}"></div></div>',
-            'search' => '<div class="col-sm-12 col-md-12 col-lg-7 col-xl-4"><div class="form-group row mb-2">{{label}}{{input}}</div></div>',
-            'info' => '<div class="col-sm-12 col-md-12 col-lg-5 col-xl-8"><div class="d-flex h-100 align-items-end"><p class="mb-1 ml-1">{{content}}</p></div></div>',
+            'pageLimitAndFilterItem' => '<a href="{{url}}"{{attrs}}>{{label}}</a>',
+            'pageLimitAndFilter' => '<button type="button" class="btn btn-table dropdown-toggle" data-bs-toggle="dropdown" data-toggle="dropdown" aria-expanded="false">{{label}} <span class="caret"></span></button><div class="dropdown-menu">{{items}}</div>',
+            'searchInput' => '<div class="col-12"><div class="input-group"><div class="input-group-append">{{filter}}{{pageLimit}}</div><input type="text" value="{{value}}" data-scope="{{scope}}" id="{{id}}" class="form-control table-search-input" placeholder="{{placeholder}}"></div></div>',
+            'search' => '<div class="col-sm-12 col-md-12 col-lg-6 col-xl-5"><div class="form-group row mb-2">{{label}}{{input}}</div></div>',
+            'info' => '<div class="col-sm-12 col-md-12 col-lg-6 col-xl-7"><div class="d-flex h-100 align-items-end"><p class="mb-1 ml-1">{{content}}</p></div></div>',
             'pagination' => '<nav class="pull-right"><ul class="pagination pagination-sm mb-1">{{first}}{{previous}}{{numbers}}{{next}}{{last}}</ul></nav>',
             'actionButtonContainer' => '<div class="btn-group">{{content}}</div>',
         ]
     ];
 
     /**
-     * @var \AppMain\Tables\AbstractTable[]
+     * @var \Toolkit\Tables\AbstractTable[]
      */
     private array $_tableConfigs = [];
 
@@ -143,7 +143,7 @@ class TablesHelper extends Helper
     }
 
     /**
-     * @param \AppMain\Tables\AbstractTable $table
+     * @param \Toolkit\Tables\AbstractTable $table
      * @return string
      */
     private function _getTableHead(AbstractTable $table): string
@@ -196,7 +196,7 @@ class TablesHelper extends Helper
     }
 
     /**
-     * @param \AppMain\Tables\AbstractTable $table
+     * @param \Toolkit\Tables\AbstractTable $table
      * @return string
      */
     private function _getTableBody(AbstractTable $table): string
@@ -232,7 +232,7 @@ class TablesHelper extends Helper
     }
 
     /**
-     * @param \AppMain\Tables\AbstractTable $table
+     * @param \Toolkit\Tables\AbstractTable $table
      * @return string
      */
     private function _getTableHeader(AbstractTable $table): string
@@ -244,9 +244,12 @@ class TablesHelper extends Helper
             ])
         ]);
         $currentPageLimit = (int)$this->Paginator->param('perPage', $table->getRepository()->getAlias());
-        $currentPageLimitLabel = __n('{0} registro por página', '{0} registros por página', $currentPageLimit, $currentPageLimit);
+        $currentPageLimitLabel = __n('{0} item por página', '{0} itens por página', $currentPageLimit, $currentPageLimit);
         $pageLimitItems = '';
-        foreach ($table->getPageLimitOptions() as $pageLimitOption) {
+        $pageLimitOptions = $table->getPageLimitOptions();
+        $pageLimitOptions = in_array($currentPageLimit, $pageLimitOptions) ? $pageLimitOptions : array_merge($pageLimitOptions, [$currentPageLimit]);
+        sort($pageLimitOptions);
+        foreach ($pageLimitOptions as $pageLimitOption) {
             $options = [
                 'class' => 'dropdown-item table-filter-link',
             ];
@@ -255,20 +258,49 @@ class TablesHelper extends Helper
                 $options['class'] .= ' active';
                 $url = 'javascript:void(0);';
             }
-            $pageLimitItems .= $this->formatTemplate('pageLimitItem', [
+            $pageLimitItems .= $this->formatTemplate('pageLimitAndFilterItem', [
                 'url' => $url,
-                'label' => __n('{0} registro por página', '{0} registros por página', $pageLimitOption, $pageLimitOption),
+                'label' => __n('{0} item por página', '{0} itens por página', $pageLimitOption, $pageLimitOption),
                 'attrs' => $this->templater()->formatAttributes($options),
             ]);
         }
-        $pageLimit = $this->formatTemplate('pageLimit', [
+        $pageLimit = $this->formatTemplate('pageLimitAndFilter', [
             'label' => $currentPageLimitLabel,
             'items' => $pageLimitItems,
         ]);
+        $filter = null;
+        if (!empty($table->getFilters())) {
+            $currentFilter = $this->getView()->getRequest()->getQuery(Inflector::tableize($table->getRepository()->getAlias()) . '.filter', -1);
+            $filterItems = '';
+            $filters = [-1 => __('Nenhum')] + $table->getFilters();
+            foreach ($filters as $filter => $filterLabel) {
+                $options = [
+                    'class' => 'dropdown-item table-filter-link',
+                ];
+                $url = $this->Paginator->generateUrl(['filter' => $filter, 'page' => 1], $table->getRepository()->getAlias());
+                if ($filter === -1) {
+                    $url = $this->Paginator->generateUrl(['page' => 1], $table->getRepository()->getAlias());
+                }
+                if ($filter === $currentFilter) {
+                    $options['class'] .= ' active';
+                    $url = 'javascript:void(0);';
+                }
+                $filterItems .= $this->formatTemplate('pageLimitAndFilterItem', [
+                    'url' => $url,
+                    'label' => $filterLabel,
+                    'attrs' => $this->templater()->formatAttributes($options),
+                ]);
+            }
+            $filter = $this->formatTemplate('pageLimitAndFilter', [
+                'label' => __('Filtro'),
+                'items' => $filterItems,
+            ]);
+        }
         $currentQuery = $this->getView()->getRequest()->getQuery($table->getScope() . '.query', '');
         $input = $this->formatTemplate('searchInput', [
             'value' => $currentQuery,
             'pageLimit' => $pageLimit,
+            'filter' => $filter,
             'scope' => $table->getScope(),
             'id' => 'search-input-' . Inflector::dasherize($table->getScope()),
             'placeholder' => !empty($table->getSearchPlaceholder()) ? $table->getSearchPlaceholder() : __('Digite algo para encontrar'),
@@ -284,7 +316,7 @@ class TablesHelper extends Helper
     }
 
     /**
-     * @param \AppMain\Tables\AbstractTable $table
+     * @param \Toolkit\Tables\AbstractTable $table
      * @return string
      */
     private function _getTableFooter(AbstractTable $table): string

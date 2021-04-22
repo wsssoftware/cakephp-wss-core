@@ -59,8 +59,10 @@ class TablesComponent extends Component
         $settings['scope'] = $table->getScope();
         if ($table->getDefaultPageLimit() !== null) {
             $settings['limit'] = $table->getDefaultPageLimit();
+        } else {
+            $settings['limit'] = $table->getPageLimitOptions()[array_key_first($table->getPageLimitOptions())];
         }
-        $query = $table->getQuery();
+        $query = $table->getFinalQuery();
         $searchQuery = $this->getController()->getRequest()->getQuery($settings['scope'] . '.query');
         if (!empty($searchQuery)) {
             $searchWhere['OR'] = [];
@@ -92,7 +94,7 @@ class TablesComponent extends Component
     }
 
     /**
-     * @param \AppMain\Tables\AbstractTable $table
+     * @param \Toolkit\Tables\AbstractTable $table
      * @param string $column
      * @return string
      */

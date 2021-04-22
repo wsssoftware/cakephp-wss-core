@@ -18,7 +18,7 @@ declare(strict_types=1);
 
 namespace {{ namespace }}\Tables;
 
-{% set uses = ["use #{ namespace }\\View\\AppView;", 'use Cake\\ORM\\Entity;', 'use Cake\\ORM\\Query;', 'use Cake\\Utility\\Text;', 'use Cake\\View\\View;', 'use Toolkit\\Tables\\AbstractTable;', "use #{entityFQN};", 'use Toolkit\\View\\TableView;'] %}
+{% set uses = ['use Cake\\ORM\\Entity;', 'use Cake\\ORM\\Query;', 'use Toolkit\\Tables\\AbstractTable;', "use #{entityFQN};"] %}
 {{ uses|join('\n')|raw }}
 
 {{ DocBlock.classDescription(name, 'Table', [])|raw }}
@@ -34,7 +34,19 @@ class {{ name }} extends AbstractTable
 
     public function define(): void
     {
-        // TODO: to configure table.
+//        $this
+//            ->setPageLimitOptions([5, 10, 20]) // Change page size options. Default is [10, 20, 50, 100]
+//            ->setDefaultPageLimit(2) // Change de default selected page size
+//            ->setLoadingText(__('Loading amazing items')) // Change the loading text
+//            ->setLoadingErrorText(__('Ops. Something went wrong')) // Change the loading text when something went wrong
+//            ->setSearchPlaceholder(__('A custom placeholder')) // Set a custom placeholder for search input
+//            ->setTableAttributes(['class' => 'my-specific-class']) // Set a custom attributes for table HTML tag
+//            ->setTableTitle('Table teste'); // Set a title for the table in thead HTML tag
+
+        // Example of filter
+        $this->setFilters([
+            'sample' => __('Id less than 100'),
+        ]);
 
         $this
 {% for field in fields %}
@@ -52,23 +64,35 @@ class {{ name }} extends AbstractTable
         return $this->_repository->find();
     }
 
+    /**
+     * Filter sample.
+     *
+     * @param \Cake\ORM\Query $query
+     */
+    public function filterSample(Query $query): void {
+        $pk = $this->_repository->getPrimaryKey();
+        $query->where(["$pk <=" => 100]);
+    }
+
 {% for field in fields %}
     /**
      * Get Html table for field '{{ field.name }}'
      *
+     * @note Use '$this->_view->' to access the view methods and helper.
+     *
      * @param mixed $value A value from database.
-     * @param TableView|AppView|View $view View to use helpers and other functions.
      * @param Log|Entity $entity Entity to get access to other fields.
+     * @param array $tdAttributes Attributes to use in td HTML tag.
      * @return string You must return a string.
      */
-    protected function _getColumn{{ loop.index0 }}(mixed $value, TableView|AppView|View $view, {{ entity }}|Entity $entity): string {
+    protected function _getColumn{{ loop.index0 }}(mixed $value, {{ entity }}|Entity $entity, array &$tdAttributes): string {
 
 {%- if field.type in ['int', 'biginteger', 'decimal', 'float'] %}
 
-        return $view->Number->format($value);
+        return $this->_view->Number->format($value);
 {% elseif field.type in ['text'] %}
 
-        return $view->Text->truncate(strval(h($value)), 100);
+        return $this->_view->Text->truncate(strval(h($value)), 100);
 {% elseif field.type in ['string'] %}
 
         return strval(h($value));
