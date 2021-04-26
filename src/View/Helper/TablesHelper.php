@@ -47,7 +47,7 @@ class TablesHelper extends Helper
             'emptyBody' => '<tr><td{{attrs}}>{{content}}</th></tr>',
             'tbody' => '<tbody>{{content}}</tbody>',
             'pageLimitAndFilterItem' => '<a href="{{url}}"{{attrs}}>{{label}}</a>',
-            'pageLimitAndFilter' => '<button type="button" class="btn btn-table dropdown-toggle" data-bs-toggle="dropdown" data-toggle="dropdown" aria-expanded="false">{{label}} <span class="caret"></span></button><div class="dropdown-menu">{{items}}</div>',
+            'pageLimitAndFilter' => '<div class="dropdown"><button type="button" class="btn btn-table dropdown-toggle" id="{{id}}" data-bs-toggle="dropdown" data-toggle="dropdown" aria-expanded="false">{{label}} <span class="caret"></span></button><div class="dropdown-menu" aria-labelledby="{{id}}">{{items}}</div></div>',
             'searchInput' => '<div class="col-12"><div class="input-group"><div class="input-group-append">{{filter}}{{pageLimit}}</div><input type="text" value="{{value}}" data-scope="{{scope}}" id="{{id}}" class="form-control table-search-input" placeholder="{{placeholder}}"></div></div>',
             'search' => '<div class="col-sm-12 col-md-12 col-lg-6 col-xl-5"><div class="form-group row mb-2">{{label}}{{input}}</div></div>',
             'info' => '<div class="col-sm-12 col-md-12 col-lg-6 col-xl-7"><div class="d-flex h-100 align-items-end"><p class="mb-1 ml-1">{{content}}</p></div></div>',
@@ -281,6 +281,7 @@ class TablesHelper extends Helper
             ]);
         }
         $pageLimit = $this->formatTemplate('pageLimitAndFilter', [
+            'id' => Inflector::dasherize($table->getRepository()->getAlias()) . '-page-limit-dropdown',
             'label' => $currentPageLimitLabel,
             'items' => $pageLimitItems,
         ]);
@@ -308,6 +309,7 @@ class TablesHelper extends Helper
                 ]);
             }
             $filter = $this->formatTemplate('pageLimitAndFilter', [
+                'id' => Inflector::dasherize($table->getRepository()->getAlias()) . '-filter-dropdown',
                 'label' => __('Filtro'),
                 'items' => $filterItems,
             ]);
