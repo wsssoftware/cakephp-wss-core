@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Toolkit\Controller\Component;
 
+use Cake\Routing\Router;
 use Toolkit\Tables\AbstractTable;
 use Toolkit\View\TableView;
 use Cake\Controller\Component;
@@ -54,8 +55,29 @@ class TablesComponent extends Component
         }
     }
 
+    /**
+     * @param array $fallbackUrl
+     * @return array
+     */
+    public function getLastUrl(array $fallbackUrl = []): array {
+        $url = $this->getController()->getRequest()->getSession()->read('Toolkit.tables.lastUrl', false);
+        if (!$url) {
+            return $fallbackUrl;
+        }
+        return $url;
+    }
+
+    /**
+     * @param \Toolkit\Tables\AbstractTable $table
+     * @param array $settings
+     */
     public function paginate(AbstractTable $table, array $settings = []): void
     {
+        $request = $this->getController()->getRequest();
+        if ($request->getSession()->started()) {
+            $currentUrl = Router::reverseToArray($request);
+            $request->getSession()->write('Toolkit.tables.lastUrl', $currentUrl);
+        }
         $settings['scope'] = $table->getScope();
         if ($table->getDefaultPageLimit() !== null) {
             $settings['limit'] = $table->getDefaultPageLimit();

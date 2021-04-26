@@ -30,6 +30,8 @@ class TablesHelper extends Helper
      * @var array
      */
     protected $_defaultConfig = [
+        'cssBlock' => 'css',
+        'scriptBlock' => 'script',
         'templates' => [
             'tableHeader' => '<div class="row justify-content-between">{{info}}{{search}}</div>',
             'tableFooter' => '<div class="row mt-2"><div class="col-12">{{pagination}}</div></div>',
@@ -87,6 +89,19 @@ class TablesHelper extends Helper
         $this->Paginator->setTemplates($templates);
     }
 
+
+    /**
+     * @param array $fallbackUrl
+     * @return array
+     */
+    public function getLastUrl(array $fallbackUrl = []): array {
+        $url = $this->getView()->getRequest()->getSession()->read('Toolkit.tables.lastUrl', false);
+        if (!$url) {
+            return $fallbackUrl;
+        }
+        return $url;
+    }
+
     public function renderTable(string $tableName): string
     {
         $tableName = Inflector::underscore($tableName);
@@ -128,8 +143,8 @@ class TablesHelper extends Helper
         if ($this->getView()->getRequest()->is('ajax')) {
             return $tableWrapper;
         } else {
-            $this->getView()->Html->script('Toolkit.table.min.js', ['block' => 'script']);
-            $this->getView()->Html->css('Toolkit.table.min.css', ['block' => 'css']);
+            $this->getView()->Html->css('Toolkit.table.min.css', ['block' => $this->getConfig('cssBlock')]);
+            $this->getView()->Html->script('Toolkit.table.min.js', ['block' => $this->getConfig('scriptBlock')]);
         }
 
         $mainWrapperAttributes = [
@@ -154,15 +169,16 @@ class TablesHelper extends Helper
             $columnAttributes = $column->getAttributes();
             if ($column->isDatabase() && $column->isOrderable()) {
                 $columnOptions = $column->getOptions() + ['fullBase' => true];
+                $filter = $this->getFilterName($table);
+                $tmpScopeName = 'AAABBB' . $table->getScope() . 'AAABBB';
                 if ($query !== false) {
-                    $tmpScopeName = 'AAABBB' . $table->getScope() . 'AAABBB';
-                    $columnOptions['url'] = ['?' => [$tmpScopeName => ['query' => $query]]];
-                    $columnContent = $this->Paginator->sort($column->getKey(), $column->getTitle(), $columnOptions);
-                    $columnContent = str_replace($tmpScopeName, $table->getScope(), $columnContent);
-                } else {
-                    $columnContent = $this->Paginator->sort($column->getKey(), $column->getTitle(), $columnOptions);
+                    $columnOptions['url']['?'][$tmpScopeName]['query'] = $query;
                 }
-
+                if (!empty($filter)) {
+                    $columnOptions['url']['?'][$tmpScopeName]['filter'] = $filter;
+                }
+                $columnContent = $this->Paginator->sort($column->getKey(), $column->getTitle(), $columnOptions);
+                $columnContent = str_replace($tmpScopeName, $table->getScope(), $columnContent);
 
                 if (str_contains($columnContent, '"asc"') || str_contains($columnContent, 'asc ') || str_contains($columnContent, ' asc')) {
                     $columnAttributes['class'] = !empty($columnAttributes['class']) ? 'th-asc ' . $columnAttributes['class'] : 'th-asc';
@@ -330,7 +346,11 @@ class TablesHelper extends Helper
         $query = $this->getView()->getRequest()->getQuery($table->getScope() . '.query', false);
         $tmpScopeName = 'AAABBB' . $table->getScope() . 'AAABBB';
         if ($query !== false) {
-            $default['url'] = ['?' => [$tmpScopeName => ['query' => $query]]];
+            $default['url']['?'][$tmpScopeName]['query'] = $query;
+        }
+        $filter = $this->getFilterName($table);
+        if (!empty($filter)) {
+            $default['url']['?'][$tmpScopeName]['filter'] = $filter;
         }
         $pagination = $this->formatTemplate('pagination', [
             'first' => $this->Paginator->first('<i class="fad fa-arrow-to-left"></i>' . sprintf($hiddenOnSmall, ' ' . __('Primeiro')), $default),
@@ -344,6 +364,12 @@ class TablesHelper extends Helper
         return $this->formatTemplate('tableFooter', [
             'pagination' => $pagination,
         ]);
+    }
+
+    protected function getFilterName(AbstractTable $table): ?string
+    {
+        $model = Inflector::tableize($table->getRepository()->getAlias());
+        return $this->getView()->getRequest()->getQuery("{$model}.filter", null);
     }
 
     /**
