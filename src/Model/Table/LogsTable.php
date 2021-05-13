@@ -8,6 +8,7 @@ use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
 use Cake\ORM\Table;
+use Cake\Routing\Router;
 use Cake\Utility\Text;
 
 /**
@@ -48,6 +49,11 @@ class LogsTable extends Table
 
         $this->addBehavior('Timestamp');
         $this->addBehavior('Toolkit.Trim');
+
+        $schema = $this->getSchema();
+        $schema->setColumnType('post_data', 'json');
+        $schema->setColumnType('get_data', 'json');
+        $this->setSchema($schema);
     }
 
     /**
@@ -69,6 +75,18 @@ class LogsTable extends Table
             'context' => trim(print_r($context, true)),
             'count' => 1,
         ];
+        $request = Router::getRequest();
+        if (!empty($request)) {
+            $data += [
+                'post_data' => $request->getData(),
+                'get_data' => $request->getQuery(),
+            ];
+        } else {
+            $data += [
+                'post_data' => [],
+                'get_data' => [],
+            ];
+        }
         $log = $this->newEntity($data);
 
         return (bool)$this->save($log);
@@ -76,7 +94,7 @@ class LogsTable extends Table
 
     /**
      * @param \Cake\Event\EventInterface $event
-     * @param \AppCore\Model\Entity\Log $entity
+     * @param \Toolkit\Model\Entity\Log $entity
      * @param \ArrayObject $options
      * @return void
      */

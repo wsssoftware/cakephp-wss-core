@@ -13,6 +13,8 @@ use Cake\ORM\Entity;
  * @property string $message
  * @property string $summary
  * @property string|null $context
+ * @property array|null $post_data
+ * @property array|null $get_data
  * @property string|null $ip
  * @property string|null $hostname
  * @property string|null $uri
@@ -37,6 +39,8 @@ class Log extends Entity
         'message' => true,
         'summary' => true,
         'context' => true,
+        'post_data' => true,
+        'get_data' => true,
         'ip' => true,
         'hostname' => true,
         'uri' => true,

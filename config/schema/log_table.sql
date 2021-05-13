@@ -5,6 +5,8 @@ CREATE TABLE `logs`
     `message`    text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
     `summary`    varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
     `context`    text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+    `post_data`    text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+    `get_data`    text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
     `ip`         varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
     `hostname`   varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
     `uri`        text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
