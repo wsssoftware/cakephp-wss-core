@@ -130,7 +130,7 @@ class TableCommand extends BakeCommand
             'namespace' => $namespace,
             'name' => $name,
             'entity' => $entity,
-            'entityFQN' => $model->newEmptyEntity()::class,
+            'entityFQN' => get_class($model->newEmptyEntity()),
             'table' => null,
             'tableName' => $tableName,
             'connection' => $this->connection,
