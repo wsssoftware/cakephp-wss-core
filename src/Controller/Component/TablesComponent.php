@@ -78,6 +78,9 @@ class TablesComponent extends Component
             $currentUrl = Router::reverseToArray($request);
             $request->getSession()->write('Toolkit.tables.lastUrl', $currentUrl);
         }
+        if ($this->getConfig('bootstrap', false)) {
+            $table->setBootstrapVersion($this->getConfig('bootstrap', 4));
+        }
         $settings['scope'] = $table->getScope();
         if ($table->getDefaultPageLimit() !== null) {
             $settings['limit'] = $table->getDefaultPageLimit();

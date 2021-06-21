@@ -19,6 +19,7 @@ use Cake\Utility\Inflector;
 use Cake\View\View;
 use InvalidArgumentException;
 use ReflectionClass;
+use Toolkit\View\Helper\TablesHelper;
 
 abstract class AbstractTable
 {
@@ -34,6 +35,11 @@ abstract class AbstractTable
      * @var \Cake\View\View
      */
     protected View $_view;
+
+    /**
+     * @var int
+     */
+    protected int $_bootstrapVersion = 4;
 
     /**
      * @var array
@@ -455,9 +461,20 @@ abstract class AbstractTable
     public function setView(View $view): void
     {
         $this->_view = $view;
+        if (!empty($this->_view->Tables) && $this->_view->Tables instanceof TablesHelper) {
+            $this->_view->Tables->setConfig('bootstrap', $this->_bootstrapVersion);
+        }
         foreach ($this->_helpers as $helper) {
             $this->_view->loadHelper(Hash::get($helper, 'name'), Hash::get($helper, 'config'));
         }
+    }
+
+    /**
+     * @param int $bootstrapVersion
+     */
+    public function setBootstrapVersion(int $bootstrapVersion): void
+    {
+        $this->_bootstrapVersion = $bootstrapVersion;
     }
 
     /**

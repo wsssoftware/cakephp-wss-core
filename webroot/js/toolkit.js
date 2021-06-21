@@ -49,12 +49,13 @@ let ToolkitTable = {
         this.setListeners();
     },
     setListeners: function () {
+        let parent = this;
         $(document).on('click', '.system-table-container a.table-filter-link', function (event) {
             event.preventDefault();
             let link = $(this);
             let url = link.attr('href');
             history.pushState({}, null, url);
-            this.onUrlChange();
+            parent.onUrlChange();
         });
         let localOnSearch = this.onSearch(700);
         $(document).on('keyup', '.table-search-input', function (event) {
@@ -111,6 +112,7 @@ let ToolkitTable = {
     },
     onSearch: function (delay) {
         let timer = null;
+        let parent = this;
         return function () {
             clearTimeout(timer);
             timer = window.setTimeout(function () {
@@ -136,7 +138,7 @@ let ToolkitTable = {
                     url += '?' + query;
                 }
                 history.pushState({}, null, url);
-                this.onUrlChange();
+                parent.onUrlChange();
             }, delay || 500);
         };
     }

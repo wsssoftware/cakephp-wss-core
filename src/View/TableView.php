@@ -68,7 +68,7 @@ class TableView extends View
     public function initialize(): void
     {
         parent::initialize();
-       $this->loadHelper('Toolkit.Tables');
+        $this->loadHelper('Toolkit.Tables');
     }
 
     /**
