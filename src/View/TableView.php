@@ -16,8 +16,10 @@ declare(strict_types=1);
  */
 namespace Toolkit\View;
 
-use AppCore\View\AppView;
 use Cake\Core\Configure;
+use Cake\Event\EventManager;
+use Cake\Http\Response;
+use Cake\Http\ServerRequest;
 use Cake\View\View;
 use RuntimeException;
 
@@ -61,14 +63,24 @@ class TableView extends View
     ];
 
     /**
-     * Initialization hook method.
-     *
-     * @return void
+     * @var \Cake\View\View
      */
-    public function initialize(): void
-    {
-        parent::initialize();
-        $this->loadHelper('Toolkit.Tables');
+    protected View $_appView;
+
+    /**
+     * @inheritDoc
+     */
+    public function __construct(?ServerRequest $request = null, ?Response $response = null, ?EventManager $eventManager = null, array $viewOptions = []) {
+        parent::__construct($request, $response, $eventManager, $viewOptions);
+
+        $appViewFqn = Configure::read('App.namespace') . "\\View\\AppView";
+        $this->_appView = new $appViewFqn($request, $response, $eventManager, $viewOptions);
+        foreach ($this->_appView->helpers()->getIterator() as $key => $helper) {
+            /** @var \Cake\View\Helper $helper */
+            if (empty($this->{$key})) {
+                $this->{$key} = $helper;
+            }
+        }
     }
 
     /**
@@ -118,7 +130,7 @@ class TableView extends View
     
     protected function _setRenderedTable(array &$data): void
     {
-        /** @var \AppMain\Tables\AbstractTable[] $tableConfigs */
+        /** @var \Toolkit\Tables\AbstractTable[] $tableConfigs */
         $tableConfigs = $data['_tableConfigs'];
         unset($data['_tableConfigs']);
         $data['tables'] = [];
