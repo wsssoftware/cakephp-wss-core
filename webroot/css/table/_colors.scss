@@ -77,6 +77,10 @@ $table-color-900:  darken($table-color, 40) !default;
 
   .table-responsive {
     .system-table {
+      > :not(caption) > * > * {
+        box-shadow: none !important;
+      }
+
       &.table-striped > tbody > tr:nth-child(odd),
       &.table-striped > tbody > tr:nth-child(odd) {
         background-color: lighten($table-color-50, 18) !important;
