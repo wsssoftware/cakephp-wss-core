@@ -25,8 +25,8 @@ class B5FormHelper extends FormHelper
         $templates['bs5CheckboxWrapperError'] = '<div class="form-check mb-3">{{input}}{{label}}{{error}}</div>';
         $templates['bs5CheckboxLabel'] = '<label class="form-check-label" for="{{for}}">{{content}}</label>';
         $templates['checkbox'] = '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}>';
-        $templates['inputContainer'] = '<div class="form-floating mb-3 {{type}}{{required}}">{{content}}</div>';
-        $templates['inputContainerError'] = '<div class="form-floating mb-3 {{type}}{{required}}">{{content}}{{error}}</div>';
+        $templates['inputContainer'] = '{{colOpen}}<div class="form-floating mb-3 {{type}}{{required}}">{{content}}</div>{{colClose}}';
+        $templates['inputContainerError'] = '{{colOpen}}<div class="form-floating mb-3 {{type}}{{required}}">{{content}}{{error}}</div>{{colClose}}';
         $templates['formGroup'] = '{{input}}{{label}}';
         $templates['error'] = '<div class="invalid-feedback">{{content}}</div>';
         $templates['errorList'] = '<ul role="list">{{content}}</ul>';
@@ -41,6 +41,12 @@ class B5FormHelper extends FormHelper
         $options['placeholder'] = !empty($options['label']) ? $options['label'] : Inflector::humanize(Inflector::underscore($fieldName));
         $options['class'] = !empty($options['class']) ? explode(' ', $options['class']) : [];
         $options['class'][] = 'form-control';
+
+        if (!empty($options['col'])) {
+            $options['templateVars']['colOpen'] = '<div class="' . $options['col'] . '">';
+            $options['templateVars']['colClose'] = '</div>';
+            unset($options['col']);
+        }
 
         $entity = $this->_getContext();
         if ($entity instanceof EntityContext && $entity->entity()->hasErrors()) {
