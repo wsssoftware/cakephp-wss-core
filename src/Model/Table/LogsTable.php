@@ -51,6 +51,7 @@ class LogsTable extends Table
         $this->addBehavior('Toolkit.Trim');
 
         $schema = $this->getSchema();
+        $schema->setColumnType('context', 'json');
         $schema->setColumnType('post_data', 'json');
         $schema->setColumnType('get_data', 'json');
         $this->setSchema($schema);
@@ -72,7 +73,7 @@ class LogsTable extends Table
             'type' => $level,
             'summary' => $summary,
             'message' => $message,
-            'context' => trim(print_r($context, true)),
+            'context' => $context,
             'count' => 1,
         ];
         $request = Router::getRequest();

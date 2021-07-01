@@ -21,7 +21,8 @@ namespace {{ namespace }}\Tables;
 {% set uses = ['use Cake\\ORM\\Entity;', 'use Cake\\ORM\\Query;', 'use Toolkit\\Tables\\AbstractTable;', "use #{entityFQN};"] %}
 {{ uses|join('\n')|raw }}
 
-{{ DocBlock.classDescription(name, 'Table', [])|raw }}
+
+{{ DocBlock.classDescription(name, 'Table', [['@property \\', namespace, '\\View\\AppView $_view']|join])|raw }}
 class {{ name }} extends AbstractTable
 {
 {% if table %}
@@ -52,7 +53,7 @@ class {{ name }} extends AbstractTable
 {% for field in fields %}
             ->addDatabaseColumn('{{ tableName }}.{{ field.name }}', __('{{ field.name|humanize }}'))
 {% endfor %}
-            ->addNonDatabaseColumn('action', __('Actions'));
+            ->addNonDatabaseColumn('actions', __('Actions'));
     }
 
     /**
@@ -74,7 +75,11 @@ class {{ name }} extends AbstractTable
         $query->where(["$pk <=" => 100]);
     }
 
+
+{% set lastLoop = 0 %}
 {% for field in fields %}
+    {% set lastLoop = loop.index0 + 1 %}
+
     /**
      * Get Html table for field '{{ field.name }}'
      *
@@ -103,4 +108,23 @@ class {{ name }} extends AbstractTable
     }
 
 {% endfor %}
+
+    /**
+     * Get Html table for field 'actions'
+     *
+     * @note Use '$this->_view->' to access the view methods and helper.
+     *
+     * @param mixed $value A value from database.
+     * @param {{ entity }}|Entity $entity Entity to get access to other fields.
+     * @param array $tdAttributes Attributes to use in td HTML tag.
+     * @return string You must return a string.
+     */
+    protected function _getColumn{{ lastLoop }}(mixed $value, {{ entity }}|Entity $entity, array &$tdAttributes): string {
+        return $this->_view->B5->btnGroupXs(
+            $this->_view->B5->urlBtnView(null, ['action' => 'view', $entity->id]),
+            $this->_view->B5->urlBtnEdit(null, ['action' => 'edit', $entity->id]),
+            $this->_view->B5->urlBtnDelete(null, ['action' => 'delete', $entity->id], ['confirm' => __('Tem certeza que deseja apagar esse {0}? Essa ação não poderá ser desfeita!', __('{{ name }}')),'post' => true]), //TODO name
+        );
+    }
+
 }

@@ -21,8 +21,10 @@ class B5FormHelper extends FormHelper
         parent::initialize($config);
         $this->setConfig('errorClass', 'is-invalid');
         $templates = $this->getTemplates();
-        $templates['bs5CheckboxWrapper'] = '<div class="form-check mb-3">{{input}}{{label}}</div>';
-        $templates['bs5CheckboxWrapperError'] = '<div class="form-check mb-3">{{input}}{{label}}{{error}}</div>';
+        $templates['bs5CheckboxWrapper'] = '<div class="form-check {{margin}}">{{input}}{{label}}</div>';
+        $templates['bs5CheckboxWrapperError'] = '<div class="form-check {{margin}}">{{input}}{{label}}{{error}}</div>';
+        $templates['bs5SwitchWrapper'] = '<div class="form-check form-switch {{margin}}">{{input}}{{label}}</div>';
+        $templates['bs5SwitchWrapperError'] = '<div class="form-check form-switch {{margin}}">{{input}}{{label}}{{error}}</div>';
         $templates['bs5CheckboxLabel'] = '<label class="form-check-label" for="{{for}}">{{content}}</label>';
         $templates['checkbox'] = '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}>';
         $templates['inputContainer'] = '{{colOpen}}<div class="form-floating mb-3 {{type}}{{required}}">{{content}}</div>{{colClose}}';
@@ -63,11 +65,27 @@ class B5FormHelper extends FormHelper
     }
 
     /**
+     * @param string $fieldName
+     * @param array $options
+     * @return string
+     */
+    public function defaultCheckbox(string $fieldName, array $options = []): string
+    {
+        return parent::checkbox($fieldName, $options);
+    }
+
+    /**
      * @inheritDoc
      */
     public function checkbox(string $fieldName, array $options = []): string
     {
         $id = $this->_domId($fieldName);
+        $options += [
+            'margin' => 'mb-3',
+        ];
+        $margin = $options['margin'];
+        $margin = $margin === false ? '' : $margin;
+        unset($options['margin']);
         $options['label'] = !empty($options['label']) ? $options['label'] : Inflector::humanize(Inflector::underscore($fieldName));
         $options['id'] = $id;
         $options['class'] = !empty($options['class']) ? explode(' ', $options['class']) : [];
@@ -83,6 +101,41 @@ class B5FormHelper extends FormHelper
         $templateName = $this->isFieldError($fieldName) ?  'bs5CheckboxWrapperError' : 'bs5CheckboxWrapper';
 
         return $this->templater()->format($templateName, [
+            'margin' => $margin,
+            'input' => $checkbox,
+            'label' => $label,
+            'error' => $error,
+        ]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function switch(string $fieldName, array $options = []): string
+    {
+        $id = $this->_domId($fieldName);
+        $options += [
+            'margin' => 'mb-3',
+        ];
+        $margin = $options['margin'];
+        $margin = $margin === false ? '' : $margin;
+        unset($options['margin']);
+        $options['label'] = !empty($options['label']) ? $options['label'] : Inflector::humanize(Inflector::underscore($fieldName));
+        $options['id'] = $id;
+        $options['class'] = !empty($options['class']) ? explode(' ', $options['class']) : [];
+        $options['class'][] = 'form-check-input';
+        $checkbox = parent::checkbox($fieldName, $options);
+        $labelString = $options['label'];
+        if (!empty($options['help']) && is_string($options['help'])) {
+            $helpTitle = $options['help'];
+            $labelString .= " <i class='fa-duotone fa-circle-question text-info-600' data-bs-toggle='tooltip' title='$helpTitle'></i>";
+        }
+        $label = $this->templater()->format('bs5CheckboxLabel', ['for' => $id, 'content' => $labelString]);
+        $error = $this->isFieldError($fieldName) ? $this->error($fieldName) : '';
+        $templateName = $this->isFieldError($fieldName) ?  'bs5SwitchWrapperError' : 'bs5SwitchWrapper';
+
+        return $this->templater()->format($templateName, [
+            'margin' => $margin,
             'input' => $checkbox,
             'label' => $label,
             'error' => $error,

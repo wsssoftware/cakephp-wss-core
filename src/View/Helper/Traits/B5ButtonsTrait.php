@@ -279,6 +279,10 @@ trait B5ButtonsTrait
             }
             $options['escape'] = false;
         }
+        if (!empty($options['post']) && $options['post'] === true) {
+            unset($options['post']);
+            return $this->getView()->Form->postLink($title, $url, $options);
+        }
         return $this->Html->link($icon . $title, $url, $options);
     }
 
