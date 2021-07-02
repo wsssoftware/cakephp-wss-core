@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Toolkit\Model\Table;
 
 use ArrayObject;
+use Authentication\AuthenticationService;
 use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
@@ -14,6 +15,7 @@ use Cake\Utility\Text;
 /**
  * Logs Model
  *
+ * @property Table|\AppCore\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
  * @method \Toolkit\Model\Entity\Log newEmptyEntity()
  * @method \Toolkit\Model\Entity\Log newEntity(array $data, array $options = [])
  * @method \Toolkit\Model\Entity\Log[] newEntities(array $data, array $options = [])
@@ -50,6 +52,13 @@ class LogsTable extends Table
         $this->addBehavior('Timestamp');
         $this->addBehavior('Toolkit.Trim');
 
+
+
+        $this->belongsTo('Users', [
+            'foreignKey' => 'user_id',
+            'joinType' => 'LEFT',
+        ]);
+
         $schema = $this->getSchema();
         $schema->setColumnType('context', 'json');
         $schema->setColumnType('post_data', 'json');
@@ -78,14 +87,21 @@ class LogsTable extends Table
         ];
         $request = Router::getRequest();
         if (!empty($request)) {
+            $userId = null;
+            $authentication = $request->getAttribute('authentication', null);
+            if (!empty($authentication) && $authentication instanceof AuthenticationService && !empty($authentication->getIdentity())) {
+                $userId = $authentication->getIdentity()->getIdentifier();
+            }
             $data += [
                 'post_data' => $request->getData(),
                 'get_data' => $request->getQuery(),
+                'user_id' => $userId
             ];
         } else {
             $data += [
                 'post_data' => [],
                 'get_data' => [],
+                'user_id' => null,
             ];
         }
         $log = $this->newEntity($data);
@@ -101,6 +117,7 @@ class LogsTable extends Table
      */
     public function beforeSave(EventInterface $event, EntityInterface $entity, ArrayObject $options): void
     {
+        //dd(Router::getRequest());
         $entity['ip'] = env('REMOTE_ADDR');
         $entity['hostname'] = env('HTTP_HOST') ?: gethostname();
         $entity['uri'] = env('REQUEST_URI');

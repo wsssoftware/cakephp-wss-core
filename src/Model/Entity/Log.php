@@ -20,8 +20,11 @@ use Cake\ORM\Entity;
  * @property string|null $uri
  * @property string|null $refer
  * @property string|null $user_agent
+ * @property int|null $user_id
  * @property int|null $count
  * @property \Cake\I18n\FrozenTime|null $created
+ *
+ * @property Entity|\AppCore\Model\Entity\User $user
  */
 class Log extends Entity
 {
@@ -46,8 +49,10 @@ class Log extends Entity
         'uri' => true,
         'refer' => true,
         'user_agent' => true,
+        'user_id' => true,
         'count' => true,
         'created' => true,
+        'user' => true,
     ];
 
     /**

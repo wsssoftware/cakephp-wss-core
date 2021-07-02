@@ -1,18 +1,21 @@
-CREATE TABLE `logs`
-(
-    `id`         bigint(20) NOT NULL AUTO_INCREMENT,
-    `type`       varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci  NOT NULL,
-    `message`    text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-    `summary`    varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-    `context`    text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
-    `post_data`    text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
-    `get_data`    text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
-    `ip`         varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-    `hostname`   varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-    `uri`        text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
-    `refer`      text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
-    `user_agent` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
-    `count`      int(10) NULL DEFAULT NULL,
-    `created`    datetime NULL DEFAULT NULL,
-    PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 813 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+CREATE TABLE IF NOT EXISTS `logs` (
+    `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+    `type` VARCHAR(50) NOT NULL,
+    `message` TEXT NOT NULL,
+    `summary` VARCHAR(255) NOT NULL,
+    `context` TEXT NULL DEFAULT NULL,
+    `post_data` TEXT NULL DEFAULT NULL,
+    `get_data` TEXT NULL DEFAULT NULL,
+    `ip` VARCHAR(100) NULL DEFAULT NULL,
+    `hostname` VARCHAR(100) NULL DEFAULT NULL,
+    `uri` TEXT NULL DEFAULT NULL,
+    `refer` TEXT NULL DEFAULT NULL,
+    `user_agent` TEXT NULL DEFAULT NULL,
+    `user_id` INT(11) NULL DEFAULT NULL,
+    `count` INT(10) NULL DEFAULT NULL,
+    `created` DATETIME NULL DEFAULT NULL,
+    PRIMARY KEY USING BTREE (`id`))
+    ENGINE = InnoDB
+    AUTO_INCREMENT = 813
+    DEFAULT CHARACTER SET = utf8
+    ROW_FORMAT = DYNAMIC;
