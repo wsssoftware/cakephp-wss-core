@@ -299,8 +299,16 @@ class TablesHelper extends Helper
         $filter = null;
         if (!empty($table->getFilters())) {
             $currentFilter = $this->getView()->getRequest()->getQuery(Inflector::tableize($table->getRepository()->getAlias()) . '.filter', -1);
+            if ($currentFilter === -1 && $table->getDefaultFilter() !== null) {
+                $currentFilter = $table->getDefaultFilter();
+
+            }
+            if ($table->getDefaultFilter() !== null) {
+                $filters = $table->getFilters();
+            } else {
+                $filters = [-1 => __('Nenhum')] + $table->getFilters();
+            }
             $filterItems = '';
-            $filters = [-1 => __('Nenhum')] + $table->getFilters();
             foreach ($filters as $filter => $filterLabel) {
                 $options = [
                     'class' => 'dropdown-item table-filter-link',

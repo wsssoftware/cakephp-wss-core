@@ -164,6 +164,9 @@ abstract class AbstractTable
         $query = $this->getQuery();
         $model =Inflector::tableize($this->getRepository()->getAlias());
         $filter = Router::getRequest()->getQuery($model . '.filter', false);
+        if ($filter === false && $this->getDefaultFilter() !== null) {
+            $filter = $this->getDefaultFilter();
+        }
         if ($filter !== false && is_string($filter) && !empty($this->_filters[$filter])) {
             $methodName = 'filter' . Inflector::camelize($filter);
             if (!method_exists($this, $methodName)) {
@@ -300,7 +303,7 @@ abstract class AbstractTable
         if (empty($this->_filters)) {
             throw new FatalErrorException('You must to set filters before use this method');
         }
-        if (!in_array($defaultFilter, $this->_filters)) {
+        if (empty($this->_filters[$defaultFilter])) {
             throw new FatalErrorException('You must to set a configured filter.');
         }
 
