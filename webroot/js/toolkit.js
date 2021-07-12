@@ -154,7 +154,7 @@ let ToolkitApexCharts = {
      * @param {ApexCharts} apexChart
      * @param {int} refreshTime
      */
-    append: function (id, apexChart, refreshTime) {
+    appendChart: function (id, apexChart, refreshTime) {
         this.charts[id] = apexChart;
         this.updateCharts(id, refreshTime)();
     },

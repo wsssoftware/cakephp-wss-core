@@ -16,7 +16,7 @@ $htmlId = $apexChart->getHtmlChartId();
     window.addEventListener("load", function () {
         let <?= $optionsVar ?> = <?= $apexChart->getJsonOptions() ?>;
         let <?= $chartVar ?> = new ApexCharts(document.querySelector("#<?= $htmlId ?>"), <?= $optionsVar ?>);
-        Toolkit.apexCharts.append('<?= $chartVar ?>', <?= $chartVar ?>, <?= $apexChart->getRefreshTime() ?>);
+        Toolkit.apexCharts.appendChart('<?= $chartVar ?>', <?= $chartVar ?>, <?= $apexChart->getRefreshTime() ?>);
         <?= $chartVar ?>.render();
 
     }, false);
