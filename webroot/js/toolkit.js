@@ -4,18 +4,6 @@ $(document).ready(function () {
     Toolkit.init();
 });
 
-let Toolkit = {
-    apexCharts: null,
-    b5form: null,
-    table: null,
-    init: function () {
-        this.apexCharts = ToolkitApexCharts;
-        this.b5form = B5Form;
-        this.table = ToolkitTable;
-        this.table.init();
-    },
-};
-
 let B5Form = {
     disableSubmit: function (element) {
         let button = $(element);
@@ -183,4 +171,13 @@ let ToolkitApexCharts = {
             });
         }
     }
+};
+
+let Toolkit = {
+    apexCharts: ToolkitApexCharts,
+    b5form: B5Form,
+    table: ToolkitTable,
+    init: function () {
+        this.table.init();
+    },
 };
