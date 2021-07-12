@@ -48,6 +48,11 @@ abstract class ApexChart
     public Legend $Legend;
 
     /**
+     * @var \Toolkit\ApexCharts\Xaxis
+     */
+    public Xaxis $Xaxis;
+
+    /**
      * @var string[]
      */
     public array $_labels = [];
@@ -87,6 +92,7 @@ abstract class ApexChart
         $this->Chart = new Chart();
         $this->Grid = new Grid();
         $this->Legend = new Legend();
+        $this->Xaxis = new Xaxis();
         $this->define();
         if (!empty(Router::getRequest()->getHeader('chartUpdate'))) {
             $this->data();
@@ -111,6 +117,9 @@ abstract class ApexChart
         $options = Hash::insert([], 'series', $this->_series);
         if (!empty($this->_labels)) {
             $options = Hash::insert($options, 'labels', $this->_labels);
+        }
+        if (!empty($this->_colors)) {
+            $options = Hash::insert($options, 'colors', $this->_colors);
         }
 
         return $options;
@@ -166,10 +175,14 @@ abstract class ApexChart
 
     /**
      * @param array $label
+     * @param array|null $colors
      * @param mixed $data
      */
-    public function appendPieData(array $label, array $data) {
+    public function appendPieData(array $label, ?array $colors, array $data) {
         $this->_labels = $label;
+        if (!empty($colors)) {
+            $this->_colors = $colors;
+        }
         $this->_series = $data;
     }
 
@@ -229,6 +242,7 @@ abstract class ApexChart
         $options = Hash::insert($options, 'chart', $this->Chart->getOptions());
         $options = Hash::insert($options, 'grid', $this->Grid->getOptions());
         $options = Hash::insert($options, 'legend', $this->Legend->getOptions());
+        $options = Hash::insert($options, 'xaxis', $this->Xaxis->getOptions());
         $options = Hash::insert($options, 'series', []);
         $options = Hash::insert($options, 'labels', []);
         if (!empty($this->_colors)) {
