@@ -68,7 +68,7 @@ abstract class ApexChart
     protected array $_options = [
         'xaxis' => [
             'type' => 'datetime',
-        ]
+        ],
     ];
 
     /**
@@ -165,6 +165,15 @@ abstract class ApexChart
     }
 
     /**
+     * @param array $label
+     * @param mixed $data
+     */
+    public function appendPieData(array $label, array $data) {
+        $this->_labels = $label;
+        $this->_series = $data;
+    }
+
+    /**
      * @return int
      */
     public function getRefreshTime(): int
@@ -221,7 +230,10 @@ abstract class ApexChart
         $options = Hash::insert($options, 'grid', $this->Grid->getOptions());
         $options = Hash::insert($options, 'legend', $this->Legend->getOptions());
         $options = Hash::insert($options, 'series', []);
-        $options = Hash::insert($options, 'colors', $this->_colors);
+        $options = Hash::insert($options, 'labels', []);
+        if (!empty($this->_colors)) {
+            $options = Hash::insert($options, 'colors', $this->_colors);
+        }
         $options = Hash::insert($options, 'noData.text', __('Nenhum dado'));
         if (!empty($this->_labels)) {
             $options = Hash::insert($options, 'labels', []);
