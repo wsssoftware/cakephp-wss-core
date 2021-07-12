@@ -5,11 +5,13 @@ $(document).ready(function () {
 });
 
 let Toolkit = {
-    table: null,
+    apexCharts: null,
     b5form: null,
+    table: null,
     init: function () {
-        this.table = ToolkitTable;
+        this.apexCharts = ToolkitApexCharts;
         this.b5form = B5Form;
+        this.table = ToolkitTable;
         this.table.init();
     },
 };
@@ -75,7 +77,7 @@ let ToolkitTable = {
             headers: {
                 tableUpdate: true,
             },
-            beforeSend: function( xhr ) {
+            beforeSend: function (xhr) {
                 $('.system-table-container .table-responsive').each(function () {
                     $(this).addClass('table-loading');
                 });
@@ -141,5 +143,44 @@ let ToolkitTable = {
                 parent.onUrlChange();
             }, delay || 500);
         };
+    }
+};
+
+let ToolkitApexCharts = {
+    charts: {},
+    /**
+     *
+     * @param id
+     * @param {ApexCharts} apexChart
+     * @param {int} refreshTime
+     */
+    append: function (id, apexChart, refreshTime) {
+        this.charts[id] = apexChart;
+        this.updateCharts(id, refreshTime)();
+    },
+    updateCharts: function (id, refreshTime) {
+        let globalClass = this;
+        return function () {
+            console.log(id);
+            $.ajax({
+                url: location.href,
+                dataType: 'json',
+                headers: {
+                    chartUpdate: true,
+                },
+                beforeSend: function (xhr) {
+
+                },
+                success: function (data, textStatus, jqXHR) {
+                    console.log(data[id]);
+                    globalClass.charts[id].updateOptions(data[id]);
+
+                    setTimeout(globalClass.updateCharts(id, refreshTime), refreshTime * 1000);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                }
+            });
+        }
     }
 };
