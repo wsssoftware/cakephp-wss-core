@@ -48,9 +48,19 @@ abstract class ApexChart
     public Legend $Legend;
 
     /**
+     * @var \Toolkit\ApexCharts\Tooltip
+     */
+    public Tooltip $Tooltip;
+
+    /**
      * @var \Toolkit\ApexCharts\Xaxis
      */
     public Xaxis $Xaxis;
+
+    /**
+     * @var \Toolkit\ApexCharts\Yaxis
+     */
+    public Yaxis $Yaxis;
 
     /**
      * @var string[]
@@ -101,7 +111,9 @@ abstract class ApexChart
         $this->Chart = new Chart();
         $this->Grid = new Grid();
         $this->Legend = new Legend();
+        $this->Tooltip = new Tooltip();
         $this->Xaxis = new Xaxis();
+        $this->Yaxis = new Yaxis();
         $this->define();
         if (!empty(Router::getRequest()->getHeader('chartUpdate'))) {
             $this->data();
@@ -251,7 +263,9 @@ abstract class ApexChart
         $options = Hash::insert($options, 'chart', $this->Chart->getOptions());
         $options = Hash::insert($options, 'grid', $this->Grid->getOptions());
         $options = Hash::insert($options, 'legend', $this->Legend->getOptions());
+        $options = Hash::insert($options, 'tooltip', $this->Tooltip->getOptions());
         $options = Hash::insert($options, 'xaxis', $this->Xaxis->getOptions());
+        $options = Hash::insert($options, 'yaxis', $this->Yaxis->getOptions());
         $options = Hash::insert($options, 'series', []);
         $options = Hash::insert($options, 'labels', []);
         if (!empty($this->_colors)) {
@@ -272,9 +286,11 @@ abstract class ApexChart
     {
         $debug = Configure::read('debug', false);
         if ($debug) {
-            return json_encode($this->getOptions(), \JSON_PRETTY_PRINT);
+            $json = json_encode($this->getOptions(), \JSON_PRETTY_PRINT);
+        } else {
+            $json = json_encode($this->getOptions());
         }
-        return json_encode($this->getOptions());
+        return str_replace(['"###FUNCTION###', '###FUNCTION###"', "'###FUNCTION###", "###FUNCTION###'"], '', $json);
     }
 
 }

@@ -10,7 +10,6 @@ $htmlId = $apexChart->getHtmlChartId();
 
 ?>
 <div id="<?= $htmlId ?>" class="w-100">
-    <h4>dsdsa</h4>
 </div>
 <script type="text/javascript">
     window.addEventListener("load", function () {

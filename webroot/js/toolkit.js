@@ -170,7 +170,12 @@ let ToolkitApexCharts = {
                 }
             });
         }
-    }
+    },
+    formatters: {
+        currency: function (value, locale, currency) {
+            return value.toLocaleString(locale,{style:"currency", currency:currency})
+        }
+    },
 };
 
 let Toolkit = {

@@ -20,15 +20,15 @@ class Xaxis
         self::TYPE_NUMERIC,
     ];
 
-
-
-
     /**
      * @var string
      */
     protected string $_type = self::TYPE_CATEGORY;
 
-
+    /**
+     * @var bool
+     */
+    protected bool $_labelsDatetimeUTC = false;
 
     /**
      * @param string $type
@@ -42,12 +42,23 @@ class Xaxis
     }
 
     /**
+     * @param bool $labelsDatetimeUTC
+     */
+    public function setLabelsDatetimeUTC(bool $labelsDatetimeUTC): void
+    {
+        $this->_labelsDatetimeUTC = $labelsDatetimeUTC;
+    }
+
+    /**
      * @return array
      */
     public function getOptions(): array
     {
         return [
             'type' => $this->_type,
+            'labels' => [
+                'datetimeUTC' => $this->_labelsDatetimeUTC,
+            ]
         ];
     }
 }
