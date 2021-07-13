@@ -81,14 +81,23 @@ abstract class ApexChart
      */
     protected int $_refreshTime = 30;
 
+
+
+    /**
+     * Default config for chart.
+     *
+     * @var array
+     */
+    protected array $_defaultConfig = [];
+
     /**
      * TableAbstract constructor.
      */
-    public function __construct()
+    public function __construct(string $key = '')
     {
         $this->_loadingText = __('Carregando') . '...';
         $this->_loadingErrorText = __('Algo deu errado ao carregar o gráfico! Tente atualizar a página.');
-        $this->_chartId = self::generateChartId($this::class);
+        $this->_chartId = self::generateChartId($this::class . $key);
         $this->Chart = new Chart();
         $this->Grid = new Grid();
         $this->Legend = new Legend();

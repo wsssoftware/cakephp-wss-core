@@ -40,6 +40,10 @@ class ApexChartsHelper extends Helper
         $this->_chartsConfigs = $this->getView()->get('_chartsConfigs', []);
     }
 
+    /**
+     * @param string $name
+     * @return \Toolkit\ApexCharts\ApexChart
+     */
     public function getChartConfig(string $name): ApexChart
     {
         $chartId = 'apex_chart_' . ApexChart::generateChartId($name);
@@ -52,11 +56,12 @@ class ApexChartsHelper extends Helper
 
     /**
      * @param string $name
+     * @param string $key
      * @return string
      */
-    public function render(string $name): string
+    public function render(string $name, string $key = ''): string
     {
-        $apexChart = $this->getChartConfig($name);
+        $apexChart = $this->getChartConfig($name . $key);
         return $this->getView()->element('Toolkit.apex_chart', compact('apexChart'));
     }
 
