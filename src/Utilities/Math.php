@@ -70,4 +70,62 @@ class Math
     {
         self::$maxSumItems = $maxSumItems;
     }
+
+    /**
+     * @param array $data
+     * @return float
+     */
+    public static function standardDeviation(array $data): float
+    {
+        $numberOfElements = count($data);
+        $variance = 0.0;
+        $average = array_sum($data)/$numberOfElements;
+
+        foreach($data as $value)
+        {
+            $variance += pow(($value - $average), 2);
+        }
+
+        return sqrt($variance/$numberOfElements);
+    }
+
+    /**
+     * @param array $items
+     * @return float
+     */
+    public static function minNormalCurve(array $items): float
+    {
+        $standardDeviation = self::standardDeviation($items);
+        $average = array_sum($items)/count($items);
+
+        return $average - 1.64 * ($standardDeviation / pow(count($items), 0.5));
+    }
+
+    /**
+     * @param array $items
+     * @return float
+     */
+    public static function maxNormalCurve(array $items): float
+    {
+        $standardDeviation = self::standardDeviation($items);
+        $average = array_sum($items)/count($items);
+
+        return $average + 1.64 * ($standardDeviation / pow(count($items), 0.5));
+    }
+
+    /**
+     * @param array $items
+     * @return array
+     */
+    public static function removeFromArrayOutFromNormalCurve(array $items): array
+    {
+        $min = self::minNormalCurve($items);
+        $max = self::maxNormalCurve($items);
+        foreach ($items as $key => $item) {
+            if ($item > $max || $item < $min) {
+                unset($items[$key]);
+            }
+        }
+        return $items;
+    }
 }
