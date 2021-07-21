@@ -114,10 +114,6 @@ abstract class ApexChart
         $this->Tooltip = new Tooltip();
         $this->Xaxis = new Xaxis();
         $this->Yaxis = new Yaxis();
-        $this->define();
-        if (!empty(Router::getRequest()->getHeader('chartUpdate'))) {
-            $this->data();
-        }
     }
 
     /**

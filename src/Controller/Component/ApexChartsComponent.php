@@ -5,6 +5,7 @@ namespace Toolkit\Controller\Component;
 
 use Cake\Controller\Component;
 use Cake\Event\EventManager;
+use Cake\Routing\Router;
 use Cake\View\JsonView;
 use Toolkit\ApexCharts\ApexChart;
 
@@ -44,6 +45,10 @@ class ApexChartsComponent extends Component
 
     public function setChart(ApexChart $apexCharts): void
     {
+        $apexCharts->define();
+        if (!empty(Router::getRequest()->getHeader('chartUpdate'))) {
+            $apexCharts->data();
+        }
         $this->_chartsConfigs[$apexCharts->getVariableChartId()] = $apexCharts;
     }
 
