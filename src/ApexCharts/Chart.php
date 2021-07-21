@@ -127,6 +127,7 @@ class Chart
     public function getOptions(): array
     {
         return [
+            'height' => $this->_height,
             'type' => $this->_type,
             'defaultLocale' => $this->_defaultLocale,
             'locales' => $this->_getLocale(),

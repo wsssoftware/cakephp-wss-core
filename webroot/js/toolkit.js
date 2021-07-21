@@ -175,8 +175,8 @@ let ToolkitApexCharts = {
         percentage: function (value, locale, maximumFractionDigits) {
             return new Intl.NumberFormat(locale,{style:"percent", maximumFractionDigits:maximumFractionDigits}).format(value / 100);
         },
-        currency: function (value, locale, currency) {
-            return value.toLocaleString(locale,{style:"currency", currency:currency})
+        currency: function (value, locale, currency, maximumFractionDigits = 2) {
+            return new Intl.NumberFormat(locale,{style:"currency", currency:currency, maximumFractionDigits: maximumFractionDigits}).format(value);
         },
     },
 };

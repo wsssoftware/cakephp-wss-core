@@ -33,6 +33,11 @@ abstract class ApexChart
     protected string $_loadingErrorText;
 
     /**
+     * @var \Toolkit\ApexCharts\Annotations
+     */
+    public Annotations $Annotations;
+
+    /**
      * @var \Toolkit\ApexCharts\Chart
      */
     public Chart $Chart;
@@ -108,6 +113,7 @@ abstract class ApexChart
         $this->_loadingText = __('Carregando') . '...';
         $this->_loadingErrorText = __('Algo deu errado ao carregar o gráfico! Tente atualizar a página.');
         $this->_chartId = self::generateChartId($this::class . $key);
+        $this->Annotations = new Annotations();
         $this->Chart = new Chart();
         $this->Grid = new Grid();
         $this->Legend = new Legend();
@@ -256,6 +262,7 @@ abstract class ApexChart
     {
         $options = $this->_options;
 
+        $options = Hash::insert($options, 'annotations', $this->Annotations->getOptions());
         $options = Hash::insert($options, 'chart', $this->Chart->getOptions());
         $options = Hash::insert($options, 'grid', $this->Grid->getOptions());
         $options = Hash::insert($options, 'legend', $this->Legend->getOptions());
