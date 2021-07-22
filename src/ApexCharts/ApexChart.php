@@ -9,13 +9,14 @@ use Cake\Core\Configure;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Error\FatalErrorException;
-use Cake\Utility\Hash;
 
 abstract class ApexChart
 {
 
     use ModelAwareTrait;
     use InstanceConfigTrait;
+
+    use TitleTrait;
 
     public const ID_PREFIX = 'apex_chart_';
 
