@@ -31,7 +31,7 @@ class ApexChartsComponent extends Component
             function ()
             {
                 $this->getController()->set('_chartsConfigs', $this->_chartsConfigs);
-                $this->_setView();
+                $this->_setAjaxData();
             }
         );
     }
@@ -45,24 +45,21 @@ class ApexChartsComponent extends Component
 
     public function setChart(ApexChart $apexCharts): void
     {
-        $apexCharts->define();
-        if (!empty(Router::getRequest()->getHeader('chartUpdate'))) {
-            $apexCharts->data();
-        }
-        $this->_chartsConfigs[$apexCharts->getVariableChartId()] = $apexCharts;
+        $apexCharts->configure();
+        $this->_chartsConfigs[$apexCharts->getId()] = $apexCharts;
     }
 
     /**
-     *
+     * @return void
      */
-    private function _setView()
+    private function _setAjaxData(): void
     {
-        if (!empty($this->getController()->getRequest()->getHeader('chartUpdate'))) {
-            $_apexChartItem = [];
+        if (!empty($this->getController()->getRequest()->getHeader('apexChartsUpdate'))) {
+            $_apexCharts = [];
             foreach ($this->_chartsConfigs as $chartsConfig) {
-                $_apexChartItem[$chartsConfig->getVariableChartId()] = $chartsConfig->getJsonData();
+                $_apexCharts[$chartsConfig->getId()] = $chartsConfig->getData();
             }
-            $this->getController()->set('_apexChartItem', $_apexChartItem);
+            $this->getController()->set('_apexChartItem', $_apexCharts);
             $this->getController()->viewBuilder()->setOption('serialize', '_apexChartItem');
             $this->getController()->viewBuilder()->setClassName(JsonView::class);
         }

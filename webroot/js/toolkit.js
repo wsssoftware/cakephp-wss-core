@@ -136,40 +136,50 @@ let ToolkitTable = {
 
 let ToolkitApexCharts = {
     charts: {},
+    refreshTime: undefined,
+    interval: undefined,
     /**
      *
      * @param id
      * @param {ApexCharts} apexChart
-     * @param {int} refreshTime
+     * @param {boolean} lastChart
      */
-    appendChart: function (id, apexChart, refreshTime) {
+    appendChart: function (id, apexChart, lastChart) {
         this.charts[id] = apexChart;
-        this.updateCharts(id, refreshTime)();
-    },
-    updateCharts: function (id, refreshTime) {
-        let globalClass = this;
-        return function () {
-            console.log(id);
-            $.ajax({
-                url: location.href,
-                dataType: 'json',
-                headers: {
-                    chartUpdate: true,
-                },
-                beforeSend: function (xhr) {
-
-                },
-                success: function (data, textStatus, jqXHR) {
-                    console.log(data[id]);
-                    globalClass.charts[id].updateOptions(data[id]);
-
-                    setTimeout(globalClass.updateCharts(id, refreshTime), refreshTime * 1000);
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-
-                }
-            });
+        if (lastChart) {
+            if (this.interval === undefined && (this.refreshTime !== undefined || this.refreshTime !== -1)) {
+                this.interval = setInterval(function () {
+                    console.log('time');
+                }, this.refreshTime);
+            }
+            for (let key in this.charts) {
+                console.log(key);
+                this.charts[key].render();
+            }
+            this.updateCharts();
         }
+    },
+    updateCharts: function () {
+        let charts = this.charts;
+        $.ajax({
+            url: location.href,
+            dataType: 'json',
+            headers: {
+                apexChartsUpdate: true,
+            },
+            beforeSend: function (xhr) {
+
+            },
+            success: function (data, textStatus, jqXHR) {
+                console.log(data);
+                for (let key in charts) {
+                    charts[key].updateOptions(data[key], true, true, false);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+
+            }
+        });
     },
     formatters: {
         percentage: function (value, locale, maximumFractionDigits) {

@@ -57,7 +57,7 @@ class Yaxis
         if (empty($locale)) {
             $locale = str_replace('_', '-', Configure::read('App.defaultLocale', 'en_US'));
         }
-        $this->_formatter = "###FUNCTION###function (value) { return Toolkit.apexCharts.formatters.percentage(value, '$locale', $maximumFractionDigits) },###FUNCTION###";
+        $this->_formatter = "###FUNCTION###function (value) {return Toolkit.apexCharts.formatters.percentage(value, '$locale', $maximumFractionDigits) },###FUNCTION###";
 
         return $this;
     }
@@ -70,6 +70,7 @@ class Yaxis
         $options = [
             'labels' => [
                 'show' => $this->_labelShow,
+                'minWidth' => 40,
             ]
         ];
         if (!empty($this->_formatter)) {

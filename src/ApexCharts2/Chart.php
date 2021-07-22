@@ -67,7 +67,17 @@ class Chart
     /**
      * @var int|string
      */
-    protected int|string $_width ='100%';
+    protected int|string $_width = '100%';
+
+    /**
+     * @var null|string
+     */
+    protected null|string $_group = null;
+
+    /**
+     * @var string
+     */
+    protected string $_id;
 
     /**
      * Background color for the chart area. If you want to set background with css, use .apexcharts-canvas to set it.
@@ -122,11 +132,21 @@ class Chart
     }
 
     /**
+     * @param string $group
+     * @param string $id
+     */
+    public function setGroup(string $group, string $id): void
+    {
+        $this->_group = $group;
+        $this->_id = $id;
+    }
+
+    /**
      * @return array
      */
     public function getOptions(): array
     {
-        return [
+        $options = [
             'height' => $this->_height,
             'type' => $this->_type,
             'defaultLocale' => $this->_defaultLocale,
@@ -134,6 +154,12 @@ class Chart
             'background' => $this->_background,
             'foreColor' => $this->_foreColor,
         ];
+        if (!empty($this->_group)) {
+            $options['id'] = $this->_id;
+            $options['group'] = $this->_group;
+        }
+
+        return $options;
     }
 
     /**
