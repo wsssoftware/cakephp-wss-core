@@ -164,6 +164,19 @@ trait ChartTrait
     }
 
     /**
+     * Sparkline hides all the elements of the charts other than the primary paths. Helps to visualize data in small areas
+     *
+     * @param bool $enabled
+     * @return \Toolkit\ApexCharts\ApexChart|\Toolkit\ApexCharts\Trait\ChartTrait
+     */
+    public function setChartSparklineEnabled(bool $enabled): self
+    {
+        $this->setConfig('chart.sparkline.enabled', $enabled);
+
+        return $this;
+    }
+
+    /**
      * Enables stacked option for axis charts.
      *
      * @note A stacked chart works only for same chart types and won’t work in combo/mixed charts combinations.So, an area series combined with a column series will not work.
