@@ -9,6 +9,8 @@ use Cake\Core\Configure;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Error\FatalErrorException;
+use Toolkit\ApexCharts\Trait\SubtitleTrait;
+use Toolkit\ApexCharts\Trait\TitleTrait;
 
 abstract class ApexChart
 {
@@ -17,6 +19,7 @@ abstract class ApexChart
     use InstanceConfigTrait;
 
     use TitleTrait;
+    use SubtitleTrait;
 
     public const ID_PREFIX = 'apex_chart_';
 
