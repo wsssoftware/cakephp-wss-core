@@ -12,6 +12,9 @@ use Cake\Error\FatalErrorException;
 use Toolkit\ApexCharts\Trait\AnnotationsTrait;
 use Toolkit\ApexCharts\Trait\ChartAnimationsTrait;
 use Toolkit\ApexCharts\Trait\ChartBrushTrait;
+use Toolkit\ApexCharts\Trait\ChartDropShadowTrait;
+use Toolkit\ApexCharts\Trait\ChartEventsTrait;
+use Toolkit\ApexCharts\Trait\ChartSelectionTrait;
 use Toolkit\ApexCharts\Trait\ChartTrait;
 use Toolkit\ApexCharts\Trait\ColorsTrait;
 use Toolkit\ApexCharts\Trait\SubtitleTrait;
@@ -23,16 +26,20 @@ abstract class ApexChart
 
     use ModelAwareTrait;
     use InstanceConfigTrait;
-
     use AnnotationsTrait;
     use ChartTrait;
     use ChartAnimationsTrait;
     use ChartBrushTrait;
+    use ChartEventsTrait;
+    use ChartDropShadowTrait;
+    use ChartSelectionTrait;
     use ColorsTrait;
     use SubtitleTrait;
     use TitleTrait;
 
     public const ID_PREFIX = 'apex_chart_';
+
+    public const QUOTES_REPLACE = '###QUOTES###';
 
     /**
      * @var int
@@ -155,7 +162,22 @@ abstract class ApexChart
      */
     protected function _replaceQuotesFromJson(string $json): string
     {
-        return str_replace(['"###QUOTES###', '###QUOTES###"', "'###QUOTES###", "###QUOTES###'"], '', $json);
+        $replace = [
+            '"' . self::QUOTES_REPLACE,
+            self::QUOTES_REPLACE . '"',
+            "'" . self::QUOTES_REPLACE,
+            self::QUOTES_REPLACE . "'",
+        ];
+        return str_replace($replace, '', $json);
+    }
+
+    /**
+     * @param string $body
+     * @return string
+     */
+    protected function _wrapQuotesReplace(string $body): string
+    {
+        return self::QUOTES_REPLACE . $body . self::QUOTES_REPLACE;
     }
 
 
