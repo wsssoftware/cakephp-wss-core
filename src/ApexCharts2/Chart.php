@@ -165,7 +165,7 @@ class Chart
     /**
      * @return array
      */
-    protected function _getLocale(): array
+    protected function _setLocale(): array
     {
         return [
             [

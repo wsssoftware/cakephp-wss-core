@@ -128,6 +128,7 @@ abstract class ApexChart
     public function getOptions(): array
     {
         $this->setAnnotationsOptions();
+        $this->_setLocales();
         $this->setColorsOptions();
         $options = $this->getConfig();
         Arrays::globalKSort($options);
