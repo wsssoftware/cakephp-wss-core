@@ -36,7 +36,7 @@ trait TitleTrait
     {
         $valid = ['left', 'center', 'right'];
         if (!in_array($align, $valid)) {
-            throw new ApexChartWrongOptionException('titleAlign', null, $valid);
+            throw new ApexChartWrongOptionException('titleAlign', $align, $valid);
         }
         $this->setConfig('title.align', $align);
 

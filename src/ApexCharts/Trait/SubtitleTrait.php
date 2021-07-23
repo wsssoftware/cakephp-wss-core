@@ -37,7 +37,7 @@ trait SubtitleTrait
     {
         $valid = ['left', 'center', 'right'];
         if (!in_array($align, $valid)) {
-            throw new ApexChartWrongOptionException('titleAlign', null, $valid);
+            throw new ApexChartWrongOptionException('subtitleAlign', $align, $valid);
         }
         $this->setConfig('subtitle.align', $align);
 

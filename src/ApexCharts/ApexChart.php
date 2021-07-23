@@ -9,8 +9,14 @@ use Cake\Core\Configure;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Error\FatalErrorException;
+use Toolkit\ApexCharts\Trait\AnnotationsTrait;
+use Toolkit\ApexCharts\Trait\ChartAnimationsTrait;
+use Toolkit\ApexCharts\Trait\ChartBrushTrait;
+use Toolkit\ApexCharts\Trait\ChartTrait;
+use Toolkit\ApexCharts\Trait\ColorsTrait;
 use Toolkit\ApexCharts\Trait\SubtitleTrait;
 use Toolkit\ApexCharts\Trait\TitleTrait;
+use Toolkit\Utilities\Arrays;
 
 abstract class ApexChart
 {
@@ -18,8 +24,13 @@ abstract class ApexChart
     use ModelAwareTrait;
     use InstanceConfigTrait;
 
-    use TitleTrait;
+    use AnnotationsTrait;
+    use ChartTrait;
+    use ChartAnimationsTrait;
+    use ChartBrushTrait;
+    use ColorsTrait;
     use SubtitleTrait;
+    use TitleTrait;
 
     public const ID_PREFIX = 'apex_chart_';
 
@@ -116,7 +127,11 @@ abstract class ApexChart
      */
     public function getOptions(): array
     {
-        return $this->getConfig();
+        $this->setAnnotationsOptions();
+        $this->setColorsOptions();
+        $options = $this->getConfig();
+        Arrays::globalKSort($options);
+        return $options;
     }
 
     /**
