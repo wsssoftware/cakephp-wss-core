@@ -203,7 +203,7 @@ trait ChartTrait
     {
         $valid = ['normal', '100%'];
         if (!in_array($stackType, $valid)) {
-            throw new ApexChartWrongOptionException('stackType', $stackType, $valid);
+            throw new ApexChartWrongOptionException('chart.stackType', $stackType, $valid);
         }
         $this->setConfig('chart.stackType', $stackType);
 
@@ -233,7 +233,7 @@ trait ChartTrait
     {
         $valid = ['line', 'area', 'bar', 'radar', 'histogram', 'pie', 'donut', 'radialBar', 'scatter', 'bubble', 'heatmap', 'candlestick'];
         if (!in_array($type, $valid)) {
-            throw new ApexChartWrongOptionException('type', $type, $valid);
+            throw new ApexChartWrongOptionException('chart.type', $type, $valid);
         }
         $this->setConfig('chart.type', $type);
 

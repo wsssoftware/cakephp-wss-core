@@ -36,7 +36,7 @@ trait ChartAnimationsTrait
     {
         $valid = ['linear', 'easein', 'easeout', 'easeinout'];
         if (!in_array($easing, $valid)) {
-            throw new ApexChartWrongOptionException('easing', $easing, $valid);
+            throw new ApexChartWrongOptionException('chart.animations.easing', $easing, $valid);
         }
         $this->setConfig('chart.animations.easing', $easing);
 

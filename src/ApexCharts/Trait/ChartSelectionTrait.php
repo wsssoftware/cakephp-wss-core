@@ -40,7 +40,7 @@ trait ChartSelectionTrait
     {
         $valid = ['x', 'y', 'xy'];
         if (!in_array($type, $valid)) {
-            throw new ApexChartWrongOptionException('type', $type, $valid);
+            throw new ApexChartWrongOptionException('chart.selection.type', $type, $valid);
         }
         $this->setConfig('chart.selection.type', $type);
 

@@ -54,7 +54,7 @@ trait AnnotationsTrait
     {
         $valid = ['front', 'back'];
         if (!in_array($position, $valid)) {
-            throw new ApexChartWrongOptionException('position', $position, $valid);
+            throw new ApexChartWrongOptionException('annotations.position', $position, $valid);
         }
         $this->setConfig('annotations.position', $position);
 

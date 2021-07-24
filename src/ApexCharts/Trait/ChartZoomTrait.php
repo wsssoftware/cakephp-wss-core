@@ -39,7 +39,7 @@ trait ChartZoomTrait
     {
         $valid = ['x', 'y', 'xy'];
         if (!in_array($type, $valid)) {
-            throw new ApexChartWrongOptionException('zoom.type', $type, $valid);
+            throw new ApexChartWrongOptionException('chart.zoom.type', $type, $valid);
         }
         $this->setConfig('chart.zoom.type', $type);
 

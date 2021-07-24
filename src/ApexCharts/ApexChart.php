@@ -19,8 +19,21 @@ use Toolkit\ApexCharts\Trait\ChartToolbarTrait;
 use Toolkit\ApexCharts\Trait\ChartTrait;
 use Toolkit\ApexCharts\Trait\ChartZoomTrait;
 use Toolkit\ApexCharts\Trait\ColorsTrait;
+use Toolkit\ApexCharts\Trait\DataLabelsTrait;
+use Toolkit\ApexCharts\Trait\FillTrait;
+use Toolkit\ApexCharts\Trait\GridTrait;
+use Toolkit\ApexCharts\Trait\LabelsTrait;
+use Toolkit\ApexCharts\Trait\LegendTrait;
+use Toolkit\ApexCharts\Trait\MarkersTrait;
+use Toolkit\ApexCharts\Trait\NoDataTrait;
+use Toolkit\ApexCharts\Trait\ResponsiveTrait;
+use Toolkit\ApexCharts\Trait\SeriesTrait;
+use Toolkit\ApexCharts\Trait\StatesTrait;
+use Toolkit\ApexCharts\Trait\StrokeTrait;
 use Toolkit\ApexCharts\Trait\SubtitleTrait;
+use Toolkit\ApexCharts\Trait\ThemeTrait;
 use Toolkit\ApexCharts\Trait\TitleTrait;
+use Toolkit\ApexCharts\Trait\TooltipTrait;
 use Toolkit\Utilities\Arrays;
 
 abstract class ApexChart
@@ -38,8 +51,21 @@ abstract class ApexChart
     use ChartToolbarTrait;
     use ChartZoomTrait;
     use ColorsTrait;
+    use DataLabelsTrait;
+    use FillTrait;
+    use GridTrait;
+    use LabelsTrait;
+    use LegendTrait;
+    use MarkersTrait;
+    use NoDataTrait;
+    use ResponsiveTrait;
+    use SeriesTrait;
+    use StatesTrait;
+    use StrokeTrait;
     use SubtitleTrait;
+    use ThemeTrait;
     use TitleTrait;
+    use TooltipTrait;
 
     public const ID_PREFIX = 'apex_chart_';
 
@@ -142,6 +168,10 @@ abstract class ApexChart
         $this->_setLocales();
         $this->_setChartToolbarCustomIcons();
         $this->setColorsOptions();
+        $this->_setLabels();
+        $this->_setMarkersDiscrete();
+        $this->_setResponsive();
+        $this->_setSeries();
         $options = $this->getConfig();
         Arrays::globalKSort($options);
         return $options;
@@ -196,6 +226,5 @@ abstract class ApexChart
         $functionBody = str_replace('"', "'", $functionBody);
         return $this->_wrapQuotesReplace("function($paramsString) {{$functionBody}}");
     }
-
 
 }

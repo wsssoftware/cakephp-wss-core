@@ -308,7 +308,7 @@ trait ChartToolbarTrait
     {
         $valid = ['zoom', 'selection', 'pan'];
         if (!in_array($autoSelected, $valid)) {
-            throw new ApexChartWrongOptionException('autoSelected', $autoSelected, $valid);
+            throw new ApexChartWrongOptionException('chart.toolbar.autoSelected', $autoSelected, $valid);
         }
         $this->setConfig('chart.toolbar.autoSelected', $autoSelected);
 
