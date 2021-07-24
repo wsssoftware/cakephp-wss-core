@@ -17,6 +17,7 @@ use Toolkit\ApexCharts\Trait\ChartEventsTrait;
 use Toolkit\ApexCharts\Trait\ChartSelectionTrait;
 use Toolkit\ApexCharts\Trait\ChartToolbarTrait;
 use Toolkit\ApexCharts\Trait\ChartTrait;
+use Toolkit\ApexCharts\Trait\ChartZoomTrait;
 use Toolkit\ApexCharts\Trait\ColorsTrait;
 use Toolkit\ApexCharts\Trait\SubtitleTrait;
 use Toolkit\ApexCharts\Trait\TitleTrait;
@@ -35,6 +36,7 @@ abstract class ApexChart
     use ChartDropShadowTrait;
     use ChartSelectionTrait;
     use ChartToolbarTrait;
+    use ChartZoomTrait;
     use ColorsTrait;
     use SubtitleTrait;
     use TitleTrait;

@@ -202,5 +202,118 @@ trait ChartToolbarTrait
         }
     }
 
+    /**
+     * Name of the csv file. Defaults to auto generated chart ID
+     *
+     * @param string $filename
+     * @return \Toolkit\ApexCharts\ApexChart|\Toolkit\ApexCharts\Trait\ChartToolbarTrait
+     */
+    public function setChartToolbarExportCsvFilename(string $filename): self
+    {
+        $this->setConfig('chart.toolbar.export.csv.filename', $filename);
+
+        return $this;
+    }
+
+    /**
+     * Name of the csv file. Defaults to auto generated chart ID
+     *
+     * @param string $columnDelimiter
+     * @return \Toolkit\ApexCharts\ApexChart|\Toolkit\ApexCharts\Trait\ChartToolbarTrait
+     */
+    public function setChartToolbarExportCsvColumnDelimiter(string $columnDelimiter): self
+    {
+        $this->setConfig('chart.toolbar.export.csv.columnDelimiter', $columnDelimiter);
+
+        return $this;
+    }
+
+    /**
+     * Column Title of X values
+     *
+     * @param string $headerCategory
+     * @return \Toolkit\ApexCharts\ApexChart|\Toolkit\ApexCharts\Trait\ChartToolbarTrait
+     */
+    public function setChartToolbarExportCsvHeaderCategory(string $headerCategory): self
+    {
+        $this->setConfig('chart.toolbar.export.csv.headerCategory', $headerCategory);
+
+        return $this;
+    }
+
+    /**
+     * Column Title of Y values
+     *
+     * @param string $headerValue
+     * @return \Toolkit\ApexCharts\ApexChart|\Toolkit\ApexCharts\Trait\ChartToolbarTrait
+     */
+    public function setChartToolbarExportCsvHeaderValue(string $headerValue): self
+    {
+        $this->setConfig('chart.toolbar.export.csv.headerValue', $headerValue);
+
+        return $this;
+    }
+
+    /**
+     * If timestamps are provided as X values, those timestamps can be formatted to convert them to date strings.
+     *
+     * @note On javascript function the param "timestamp" is available
+     * @param string $functionBody
+     * @return \Toolkit\ApexCharts\ApexChart|\Toolkit\ApexCharts\Trait\ChartToolbarTrait
+     */
+    public function setChartToolbarExportCsvDateFormatter(string $functionBody): self
+    {
+        $this->setConfig('chart.toolbar.export.csv.dateFormatter', $this->_buildJsFunction($functionBody, ['timestamp']));
+
+        return $this;
+    }
+
+    /**
+     * Name of the SVG file. Defaults to auto generated chart ID
+     *
+     * @param string $filename
+     * @return \Toolkit\ApexCharts\ApexChart|\Toolkit\ApexCharts\Trait\ChartToolbarTrait
+     */
+    public function setChartToolbarExportSvgFilename(string $filename): self
+    {
+        $this->setConfig('chart.toolbar.export.svg.filename', $filename);
+
+        return $this;
+    }
+
+    /**
+     * Name of the PNG file. Defaults to auto generated chart ID
+     *
+     * @param string $filename
+     * @return \Toolkit\ApexCharts\ApexChart|\Toolkit\ApexCharts\Trait\ChartToolbarTrait
+     */
+    public function setChartToolbarExportPngFilename(string $filename): self
+    {
+        $this->setConfig('chart.toolbar.export.png.filename', $filename);
+
+        return $this;
+    }
+
+    /**
+     * Automatically select one of the following tools when the chart loads.
+     * Available options:
+     *  - zoom
+     *  - selection
+     *  - pan
+     *
+     * @param string $autoSelected
+     * @return \Toolkit\ApexCharts\ApexChart|\Toolkit\ApexCharts\Trait\ChartToolbarTrait
+     */
+    public function setChartToolbarAutoSelected(string $autoSelected): self
+    {
+        $valid = ['zoom', 'selection', 'pan'];
+        if (!in_array($autoSelected, $valid)) {
+            throw new ApexChartWrongOptionException('autoSelected', $autoSelected, $valid);
+        }
+        $this->setConfig('chart.toolbar.autoSelected', $autoSelected);
+
+        return $this;
+    }
+
 
 }
