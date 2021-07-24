@@ -15,6 +15,7 @@ use Toolkit\ApexCharts\Trait\ChartBrushTrait;
 use Toolkit\ApexCharts\Trait\ChartDropShadowTrait;
 use Toolkit\ApexCharts\Trait\ChartEventsTrait;
 use Toolkit\ApexCharts\Trait\ChartSelectionTrait;
+use Toolkit\ApexCharts\Trait\ChartToolbarTrait;
 use Toolkit\ApexCharts\Trait\ChartTrait;
 use Toolkit\ApexCharts\Trait\ColorsTrait;
 use Toolkit\ApexCharts\Trait\SubtitleTrait;
@@ -33,6 +34,7 @@ abstract class ApexChart
     use ChartEventsTrait;
     use ChartDropShadowTrait;
     use ChartSelectionTrait;
+    use ChartToolbarTrait;
     use ColorsTrait;
     use SubtitleTrait;
     use TitleTrait;
@@ -136,6 +138,7 @@ abstract class ApexChart
     {
         $this->setAnnotationsOptions();
         $this->_setLocales();
+        $this->_setChartToolbarCustomIcons();
         $this->setColorsOptions();
         $options = $this->getConfig();
         Arrays::globalKSort($options);
@@ -178,6 +181,18 @@ abstract class ApexChart
     protected function _wrapQuotesReplace(string $body): string
     {
         return self::QUOTES_REPLACE . $body . self::QUOTES_REPLACE;
+    }
+
+    /**
+     * @param string $functionBody
+     * @param array $params
+     * @return string
+     */
+    protected function _buildJsFunction(string $functionBody, array $params = []): string
+    {
+        $paramsString = implode(', ', $params);
+        $functionBody = str_replace('"', "'", $functionBody);
+        return $this->_wrapQuotesReplace("function($paramsString) {{$functionBody}}");
     }
 
 

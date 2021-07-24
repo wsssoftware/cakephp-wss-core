@@ -13,19 +13,6 @@ trait ChartEventsTrait
 {
 
     /**
-     * @param string $functionBody
-     * @param array $params
-     * @return string
-     */
-    #[Pure]
-    protected function _buildJsFunction(string $functionBody, array $params = []): string
-    {
-        $paramsString = implode(', ', $params);
-        $functionBody = str_replace('"', "'", $functionBody);
-        return $this->_wrapQuotesReplace("function($paramsString) {{$functionBody}}");
-    }
-
-    /**
      * Fires when the chart’s initial animation is finished
      *
      * @note Available params: chartContext, options
