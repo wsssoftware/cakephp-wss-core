@@ -45,6 +45,8 @@ use Toolkit\ApexCharts\Trait\SubtitleTrait;
 use Toolkit\ApexCharts\Trait\ThemeTrait;
 use Toolkit\ApexCharts\Trait\TitleTrait;
 use Toolkit\ApexCharts\Trait\TooltipTrait;
+use Toolkit\ApexCharts\Trait\XaxisTrait;
+use Toolkit\ApexCharts\Trait\YaxisTrait;
 use Toolkit\Utilities\Arrays;
 
 abstract class ApexChart
@@ -88,6 +90,8 @@ abstract class ApexChart
     use ThemeTrait;
     use TitleTrait;
     use TooltipTrait;
+    use XaxisTrait;
+    use YaxisTrait;
 
     public const ID_PREFIX = 'apex_chart_';
 
@@ -169,12 +173,20 @@ abstract class ApexChart
     /**
      * @return void
      */
-    abstract public function initialize(): void;
+    public function initialize(): void
+    {
+
+    }
 
     /**
      * @return void
      */
     abstract public function configure(): void;
+
+    /**
+     * @return void
+     */
+    abstract public function setData(): void;
 
     /**
      * @return array
@@ -186,14 +198,16 @@ abstract class ApexChart
      */
     public function getOptions(): array
     {
-        $this->setAnnotationsOptions();
+        $this->_setAnnotationsOptions();
         $this->_setLocales();
         $this->_setChartToolbarCustomIcons();
-        $this->setColorsOptions();
+        $this->_setColorsOptions();
         $this->_setLabels();
         $this->_setMarkersDiscrete();
         $this->_setResponsive();
         $this->_setSeries();
+        $this->_setXaxisCategories();
+        $this->_setYaxis();
         $options = $this->getConfig();
         Arrays::globalKSort($options);
         return $options;
@@ -232,7 +246,7 @@ abstract class ApexChart
      * @param string $body
      * @return string
      */
-    protected function _wrapQuotesReplace(string $body): string
+    public static function wrapQuotesReplace(string $body): string
     {
         return self::QUOTES_REPLACE . $body . self::QUOTES_REPLACE;
     }
@@ -242,11 +256,16 @@ abstract class ApexChart
      * @param array $params
      * @return string
      */
-    protected function _buildJsFunction(string $functionBody, array $params = []): string
+    public function _buildJsFunction(string $functionBody, array $params = []): string
+    {
+        return self::staticBuildJsFunction($functionBody, $params);
+    }
+
+    public static function staticBuildJsFunction(string $functionBody, array $params = []): string
     {
         $paramsString = implode(', ', $params);
         $functionBody = str_replace('"', "'", $functionBody);
-        return $this->_wrapQuotesReplace("function($paramsString) {{$functionBody}}");
+        return self::wrapQuotesReplace("function($paramsString) {{$functionBody}}");
     }
 
 }

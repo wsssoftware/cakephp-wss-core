@@ -6,6 +6,8 @@ namespace Toolkit\ApexCharts\Entity;
 
 
 use Cake\Core\InstanceConfigTrait;
+use Cake\I18n\FrozenTime;
+use Toolkit\ApexCharts\ApexChart;
 use Toolkit\Exception\ApexChartWrongOptionException;
 
 class AnnotationX
@@ -22,12 +24,17 @@ class AnnotationX
     /**
      * Value on which the annotation will be drawn
      *
-     * @param float|int|string $x
+     * @param float|int|string|\Cake\I18n\FrozenTime $x
      * @return $this
      */
-    public function setX(float|int|string $x): self
+    public function setX(float|int|string|FrozenTime $x): self
     {
-        $this->setConfig('x', $x);
+        if ($x instanceof FrozenTime) {
+            $this->setConfig('x', ApexChart::wrapQuotesReplace("new Date('{$x->format('Y-m-d H:i')}').getTime()"));
+        } else {
+            $this->setConfig('x', $x);
+        }
+
 
         return $this;
     }

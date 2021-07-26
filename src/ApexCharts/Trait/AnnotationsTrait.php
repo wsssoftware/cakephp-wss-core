@@ -310,7 +310,7 @@ trait AnnotationsTrait
     /**
      * @return void
      */
-    protected function setAnnotationsOptions(): void
+    protected function _setAnnotationsOptions(): void
     {
         if (!empty($this->_annotationsImages)) {
             $images = [];

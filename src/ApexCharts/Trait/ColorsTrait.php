@@ -61,7 +61,7 @@ trait ColorsTrait
     /**
      * @return void
      */
-    protected function setColorsOptions(): void
+    protected function _setColorsOptions(): void
     {
         if (!empty($this->_colors)) {
             $this->setConfig('colors', $this->_colors);

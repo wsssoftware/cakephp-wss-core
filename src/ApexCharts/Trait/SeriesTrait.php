@@ -14,15 +14,20 @@ trait SeriesTrait
 
     /**
      * @param string $name
+     * @param string|null $type
      * @param array $data
      * @return \Toolkit\ApexCharts\ApexChart|\Toolkit\ApexCharts\Trait\SeriesTrait
      */
-    public function addSerie(string $name, array $data = []): self
+    public function addSerie(string $name, string $type = null, array $data = []): self
     {
-        $this->_series[] = [
+        $serie = [
             'name' => $name,
             'data' => $data,
         ];
+        if (!empty($type)) {
+            $serie['type'] = $type;
+        }
+        $this->_series[] = $serie;
 
         return $this;
     }
