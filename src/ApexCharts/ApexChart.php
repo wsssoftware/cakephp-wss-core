@@ -161,7 +161,7 @@ abstract class ApexChart
      */
     public static function setRefreshTime(int $_refreshTime): void
     {
-        if ($_refreshTime < 1 || $_refreshTime !== -1) {
+        if ($_refreshTime < 1 && $_refreshTime !== -1) {
             throw new FatalErrorException('Refresh time must to be greater than zero or -1 for non refresh.');
         }
         self::$_refreshTime = $_refreshTime;
