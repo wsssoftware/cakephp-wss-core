@@ -73,14 +73,19 @@ abstract class SeriesApexChart extends ApexChart
         $this->setData();
         $baseOptions = $this->getOptions();
         $options = [];
-        if (!empty($baseOptions['series'])) {
-            $options['series'] = $baseOptions['series'];
+        if (Hash::check($baseOptions, 'series')) {
+            $options = Hash::insert($options, 'series', Hash::get($baseOptions, 'series'));
         }
-        if (!empty($baseOptions['labels'])) {
-            $options['labels'] = $baseOptions['labels'];
+        if (Hash::check($baseOptions, 'labels')) {
+            $options = Hash::insert($options, 'labels', Hash::get($baseOptions, 'labels'));
         }
-        if (!empty($baseOptions['colors'])) {
-            $options['colors'] = $baseOptions['colors'];
+        if (Hash::check($baseOptions, 'colors')) {
+            $options = Hash::insert($options, 'colors', Hash::get($baseOptions, 'colors'));
+        }
+        foreach ($this->_mustUpdateOptions as $mustUpdateOption) {
+            if (Hash::check($baseOptions, $mustUpdateOption)) {
+                $options = Hash::insert($options, $mustUpdateOption, Hash::get($baseOptions, $mustUpdateOption));
+            }
         }
 
         return $options;

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types = 1);
 
 
@@ -110,19 +111,41 @@ abstract class ApexChart
     protected array $_defaultConfig = [];
 
     /**
+     * @var array
+     */
+    protected array $_mustUpdateOptions = [];
+
+    /**
      * @var string
      */
     protected string $_id;
 
     /**
-     * @param int $_refreshTime
+     * ApexChart constructor.
+     *
+     * @param string|null $id
      */
-    public static function setRefreshTime(int $_refreshTime): void
+    public function __construct(string $id = null)
     {
-        if ($_refreshTime < 1 || $_refreshTime !== -1) {
-            throw new FatalErrorException('Refresh time must to be greater than zero or -1 for non refresh.');
-        }
-        self::$_refreshTime = $_refreshTime;
+        $this->setXaxisLabelsDatetimeUTC(false);
+        $this->_id = static::generateId($id);
+        $this->initialize();
+    }
+
+    /**
+     * @param string|null $id
+     * @return string
+     */
+    public static function generateId(string $id = null): string
+    {
+        return static::ID_PREFIX . md5(static::class . $id);
+    }
+
+    /**
+     * @return void
+     */
+    public function initialize(): void
+    {
     }
 
     /**
@@ -134,24 +157,14 @@ abstract class ApexChart
     }
 
     /**
-     * ApexChart constructor.
-     *
-     * @param string|null $id
+     * @param int $_refreshTime
      */
-    public function __construct(string $id = null)
+    public static function setRefreshTime(int $_refreshTime): void
     {
-        $this->_id = static::generateId($id);
-        $this->initialize();
-    }
-
-
-    /**
-     * @param string|null $id
-     * @return string
-     */
-    public static function generateId(string $id = null): string
-    {
-        return static::ID_PREFIX . md5(static::class . $id);
+        if ($_refreshTime < 1 || $_refreshTime !== -1) {
+            throw new FatalErrorException('Refresh time must to be greater than zero or -1 for non refresh.');
+        }
+        self::$_refreshTime = $_refreshTime;
     }
 
     /**
@@ -173,14 +186,6 @@ abstract class ApexChart
     /**
      * @return void
      */
-    public function initialize(): void
-    {
-
-    }
-
-    /**
-     * @return void
-     */
     abstract public function configure(): void;
 
     /**
@@ -192,6 +197,34 @@ abstract class ApexChart
      * @return array
      */
     abstract public function getData(): array;
+
+    /**
+     * @param string $option
+     * @return self
+     */
+    public function mustUpdateOption(string $option): self
+    {
+        if (!in_array($option, $this->_mustUpdateOptions)) {
+            $this->_mustUpdateOptions[] = $option;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOptionsJson(): string
+    {
+        $debug = Configure::read('debug', false);
+        if ($debug) {
+            $json = json_encode($this->getOptions(), JSON_PRETTY_PRINT);
+        } else {
+            $json = json_encode($this->getOptions());
+        }
+
+        return $this->replaceQuotesFromJson($json);
+    }
 
     /**
      * @return array
@@ -210,28 +243,24 @@ abstract class ApexChart
         $this->_setYaxis();
         $options = $this->getConfig();
         Arrays::globalKSort($options);
-        return $options;
-    }
 
-    /**
-     * @return string
-     */
-    public function getOptionsJson(): string
-    {
-        $debug = Configure::read('debug', false);
-        if ($debug) {
-            $json = json_encode($this->getOptions(), JSON_PRETTY_PRINT);
-        } else {
-            $json = json_encode($this->getOptions());
-        }
-        return $this->_replaceQuotesFromJson($json);
+        return $options;
     }
 
     /**
      * @param string $json
      * @return string
      */
-    protected function _replaceQuotesFromJson(string $json): string
+    public function replaceQuotesFromJson(string $json): string
+    {
+        return self::staticReplaceQuotesFromJson($json);
+    }
+
+    /**
+     * @param string $json
+     * @return string
+     */
+    public static function staticReplaceQuotesFromJson(string $json): string
     {
         $replace = [
             '"' . self::QUOTES_REPLACE,
@@ -239,16 +268,8 @@ abstract class ApexChart
             "'" . self::QUOTES_REPLACE,
             self::QUOTES_REPLACE . "'",
         ];
-        return str_replace($replace, '', $json);
-    }
 
-    /**
-     * @param string $body
-     * @return string
-     */
-    public static function wrapQuotesReplace(string $body): string
-    {
-        return self::QUOTES_REPLACE . $body . self::QUOTES_REPLACE;
+        return str_replace($replace, '', $json);
     }
 
     /**
@@ -265,7 +286,17 @@ abstract class ApexChart
     {
         $paramsString = implode(', ', $params);
         $functionBody = str_replace('"', "'", $functionBody);
+
         return self::wrapQuotesReplace("function($paramsString) {{$functionBody}}");
+    }
+
+    /**
+     * @param string $body
+     * @return string
+     */
+    public static function wrapQuotesReplace(string $body): string
+    {
+        return self::QUOTES_REPLACE . $body . self::QUOTES_REPLACE;
     }
 
 }

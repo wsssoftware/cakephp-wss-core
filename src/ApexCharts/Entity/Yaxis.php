@@ -148,10 +148,10 @@ class Yaxis
      * The function accepts an argument which by default is the smallest value in the y-axis. function(min) { return min }
      *
      * @note available parameters 'min'
-     * @param int|string $min
+     * @param float|int|string $min
      * @return self
      */
-    public function setMin(int|string $min): self
+    public function setMin(float|int|string $min): self
     {
         if (is_string($min)) {
             $this->setConfig('min', $this->_apexChart->_buildJsFunction($min, ['min']));
@@ -168,10 +168,10 @@ class Yaxis
      * The function accepts an argument which by default is the smallest value in the y-axis. function(max) { return max }
      *
      * @note available parameters 'max'
-     * @param int|string $max
+     * @param float|int|string $max
      * @return self
      */
-    public function setMax(int|string $max): self
+    public function setMax(float|int|string $max): self
     {
         if (is_string($max)) {
             $this->setConfig('max', $this->_apexChart->_buildJsFunction($max, ['max']));

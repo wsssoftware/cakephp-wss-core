@@ -8,6 +8,7 @@ use Cake\Event\EventManager;
 use Cake\Routing\Router;
 use Cake\View\JsonView;
 use Toolkit\ApexCharts\ApexChart;
+use Toolkit\View\ApexChartsView;
 
 /**
  * ApexChars component
@@ -61,7 +62,7 @@ class ApexChartsComponent extends Component
             }
             $this->getController()->set('_apexChartItem', $_apexCharts);
             $this->getController()->viewBuilder()->setOption('serialize', '_apexChartItem');
-            $this->getController()->viewBuilder()->setClassName(JsonView::class);
+            $this->getController()->viewBuilder()->setClassName(ApexChartsView::class);
         }
     }
 }

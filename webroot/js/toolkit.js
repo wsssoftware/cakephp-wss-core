@@ -146,10 +146,11 @@ let ToolkitApexCharts = {
      */
     appendChart: function (id, apexChart, lastChart) {
         this.charts[id] = apexChart;
+        let globalParent = this;
         if (lastChart) {
             if (this.interval === undefined && (this.refreshTime !== undefined || this.refreshTime !== -1)) {
                 this.interval = setInterval(function () {
-                    console.log('time');
+                    globalParent.updateCharts();
                 }, this.refreshTime);
             }
             for (let key in this.charts) {

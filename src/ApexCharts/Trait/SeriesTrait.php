@@ -34,10 +34,10 @@ trait SeriesTrait
 
     /**
      * @param int $index
-     * @param int|array $data
+     * @param float|int|array $data
      * @return \Toolkit\ApexCharts\ApexChart|\Toolkit\ApexCharts\Trait\SeriesTrait
      */
-    public function appendSerieData(int $index, int|array $data): self
+    public function appendSerieData(int $index, float|int|array $data): self
     {
         if (!is_array($data)) {
             $data = [$data];
