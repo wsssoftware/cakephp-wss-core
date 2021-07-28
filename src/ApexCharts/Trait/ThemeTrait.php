@@ -39,7 +39,7 @@ trait ThemeTrait
      */
     public function setThemePalette(string $palette): self
     {
-        $valid = ['light', 'dark'];
+        $valid = ['palette1', 'palette2', 'palette3', 'palette4', 'palette5', 'palette6', 'palette7', 'palette8', 'palette9', 'palette10'];
         if (!in_array($palette, $valid)) {
             throw new ApexChartWrongOptionException('theme.mode', $palette, $valid);
         }

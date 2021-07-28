@@ -9,6 +9,8 @@ use Cake\Core\Configure;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Error\FatalErrorException;
+use Cake\I18n\FrozenDate;
+use Cake\I18n\FrozenTime;
 use Cake\Utility\Hash;
 use Toolkit\ApexCharts\Trait\AnnotationsTrait;
 use Toolkit\ApexCharts\Trait\ChartAnimationsTrait;
@@ -54,11 +56,17 @@ abstract class SeriesApexChart extends ApexChart
 {
 
     /**
-     * @param string $label
+     * @param string|\Cake\I18n\FrozenTime|\Cake\I18n\FrozenDate $label
      * @param mixed ...$series
      */
-    protected function appendData(string $label, array|int|float ...$series): void
+    protected function appendData(string|FrozenTime|FrozenDate $label, array|int|float ...$series): void
     {
+        if ($label instanceof FrozenTime) {
+            $label = $label->format('Y-m-d H:i');
+        }
+        if ($label instanceof FrozenDate) {
+            $label = $label->format('Y-m-d');
+        }
         $this->addLabel($label);
         foreach ($series as $index => $serie) {
             $this->appendSerieData($index, $serie);
