@@ -13,6 +13,11 @@ trait SeriesTrait
     protected array $_series = [];
 
     /**
+     * @var bool
+     */
+    protected bool $_renderSeriesEmpty = false;
+
+    /**
      * @param string $name
      * @param string|null $type
      * @param array $data
@@ -28,6 +33,17 @@ trait SeriesTrait
             $serie['type'] = $type;
         }
         $this->_series[] = $serie;
+
+        return $this;
+    }
+
+    /**
+     * @param int|float $value
+     * @return \Toolkit\ApexCharts\ApexChart|\Toolkit\ApexCharts\Trait\SeriesTrait
+     */
+    public function addSerieNumeric(int|float $value): self
+    {
+        $this->_series[] = $value;
 
         return $this;
     }
@@ -50,6 +66,14 @@ trait SeriesTrait
     }
 
     /**
+     * @param bool $renderSeriesEmpty
+     */
+    public function setRenderSeriesEmpty(bool $renderSeriesEmpty): void
+    {
+        $this->_renderSeriesEmpty = $renderSeriesEmpty;
+    }
+
+    /**
      * @return \Toolkit\ApexCharts\ApexChart|\Toolkit\ApexCharts\Trait\SeriesTrait
      */
     public function resetSeries(): self
@@ -64,7 +88,7 @@ trait SeriesTrait
      */
     private function _setSeries(): void
     {
-        if (!empty($this->_series)) {
+        if (!empty($this->_series) || $this->_renderSeriesEmpty === true) {
             $this->setConfig('series', $this->_series);
         }
     }

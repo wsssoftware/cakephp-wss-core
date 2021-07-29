@@ -10,6 +10,7 @@ use Cake\Core\Configure;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Error\FatalErrorException;
+use Cake\Utility\Hash;
 use Toolkit\ApexCharts\Trait\AnnotationsTrait;
 use Toolkit\ApexCharts\Trait\ChartAnimationsTrait;
 use Toolkit\ApexCharts\Trait\ChartBrushTrait;
@@ -196,7 +197,28 @@ abstract class ApexChart
     /**
      * @return array
      */
-    abstract public function getData(): array;
+    public function getData(): array
+    {
+        $this->setData();
+        $baseOptions = $this->getOptions();
+        $options = [];
+        if (Hash::check($baseOptions, 'series')) {
+            $options = Hash::insert($options, 'series', Hash::get($baseOptions, 'series'));
+        }
+        if (Hash::check($baseOptions, 'labels')) {
+            $options = Hash::insert($options, 'labels', Hash::get($baseOptions, 'labels'));
+        }
+        if (Hash::check($baseOptions, 'colors')) {
+            $options = Hash::insert($options, 'colors', Hash::get($baseOptions, 'colors'));
+        }
+        foreach ($this->_mustUpdateOptions as $mustUpdateOption) {
+            if (Hash::check($baseOptions, $mustUpdateOption)) {
+                $options = Hash::insert($options, $mustUpdateOption, Hash::get($baseOptions, $mustUpdateOption));
+            }
+        }
+
+        return $options;
+    }
 
     /**
      * @param string $option
