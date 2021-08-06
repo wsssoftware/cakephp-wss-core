@@ -128,4 +128,28 @@ class Math
         }
         return $items;
     }
+
+
+    /**
+     * @param float $value
+     * @param float $min
+     * @param float $max
+     * @return float
+     */
+    public static function getInversePercentualOfValueBetweenMaxAndMin(float $value, float $min, float $max): float
+    {
+        if ($min >= $max) {
+            throw new FatalErrorException('Min must to be lower than max.');
+        }
+        if ($value < $min) {
+            return 100;
+        }
+        if ($value > $max) {
+            return 0;
+        }
+        $step = 100 / ($max - $min);
+        $value -= $min;
+
+        return 100 - ($value * $step);
+    }
 }
