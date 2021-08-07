@@ -9,14 +9,20 @@ use AppCore\Model\Table\LogsTable;
 use Cake\Log\Engine\BaseLog;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 
 class DatabaseLog extends BaseLog
 {
 
     /**
-     * @var \Toolkit\Model\Table\LogsTable|\Cake\ORM\Table
+     * @var \Cake\ORM\Table|\Toolkit\Model\Table\LogsTable
      */
-    private LogsTable|Table $Logs;
+    private Table|\Toolkit\Model\Table\LogsTable $Logs;
+
+    /**
+     * @var array
+     */
+    protected static array $_context = [];
 
     /**
      * DatabaseLog constructor.
@@ -29,6 +35,23 @@ class DatabaseLog extends BaseLog
     }
 
     /**
+     * @return void
+     */
+    public static function resetContext(): void
+    {
+        self::$_context = [];
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $value
+     */
+    public static function addContext(string $key, mixed $value): void
+    {
+        self::$_context = Hash::insert(self::$_context, $key, $value);
+    }
+
+    /**
      * @param mixed $level
      * @param string $message
      * @param array $context
@@ -36,6 +59,7 @@ class DatabaseLog extends BaseLog
      */
     public function log($level, $message, array $context = [])
     {
+        $context = array_merge(self::$_context, $context);
         if ($this->getConfig('type')) {
             $level = $this->getConfig('type');
         } elseif ($this->getConfig('file')) {
