@@ -14,9 +14,10 @@ class Time
     /**
      * @param int $time
      * @param array $options
+     * @param bool $useShort
      * @return string
      */
-    public static function formatFromSeconds(int $time, array $options = []): string
+    public static function formatFromSeconds(int $time, array $options = [], bool $useShort = false): string
     {
         $min = 0;
         $max = 60 * 60 * 24 * 30;
@@ -42,13 +43,25 @@ class Time
             $formatList[] = __n('{0} dia', '{0} dias', $days, $days);
         }
         if ($hours > 0) {
-            $formatList[] = __n('{0} hora', '{0} horas', $hours, $hours);
+            if ($useShort) {
+                $formatList[] = __('{0}h', $hours);
+            } else {
+                $formatList[] = __n('{0} hora', '{0} horas', $hours, $hours);
+            }
         }
         if ($minutes > 0) {
-            $formatList[] = __n('{0} minuto', '{0} minutos', $minutes, $minutes);
+            if ($useShort) {
+                $formatList[] = __('{0}min', $minutes);
+            } else {
+                $formatList[] = __n('{0} minuto', '{0} minutos', $minutes, $minutes);
+            }
         }
         if ($seconds > 0) {
-            $formatList[] = __n('{0} segundo', '{0} segundos', $seconds, $seconds);
+            if ($useShort) {
+                $formatList[] = __('{0}seg', $seconds);
+            } else {
+                $formatList[] = __n('{0} segundo', '{0} segundos', $seconds, $seconds);
+            }
         }
 
         return $before . Text::toList($formatList, __('e')) . $after;
