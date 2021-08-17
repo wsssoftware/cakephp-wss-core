@@ -152,4 +152,22 @@ class Math
 
         return 100 - ($value * $step);
     }
+
+    /**
+     * @param int $number
+     * @return bool
+     */
+    public static function numberIsOdd(int $number): bool
+    {
+        return $number % 2 !== 0;
+    }
+
+    /**
+     * @param int $number
+     * @return bool
+     */
+    public static function numberIsEven(int $number): bool
+    {
+        return $number % 2 === 0;
+    }
 }
