@@ -163,6 +163,19 @@ class Math
     }
 
     /**
+     * @param int $number1
+     * @param int $number2
+     * @return bool
+     */
+    public static function hasTheSameUnitNumber(int $number1, int $number2): bool
+    {
+        $number1 = (int)substr((string)$number1, -1, 1);
+        $number2 = (int)substr((string)$number2, -1, 1);
+
+        return $number1 === $number2;
+    }
+
+    /**
      * @param int $number
      * @return bool
      */
