@@ -58,8 +58,17 @@ trait SeriesTrait
         if (!is_array($data)) {
             $data = [$data];
         }
-        foreach ($data as $datum) {
-            $this->_series[$index]['data'][] = $datum;
+        if (is_array($data) && !empty($data['x']) && !empty($data['y'])) {
+            if (empty($this->_series)) {
+                $this->_series[]['data'][] = $data;
+            } else {
+                $this->_series[array_key_first($this->_series)]['data'][] = $data;
+            }
+
+        } else {
+            foreach ($data as $datum) {
+                $this->_series[$index]['data'][] = $datum;
+            }
         }
 
         return $this;
